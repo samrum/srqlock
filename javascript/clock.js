@@ -19,8 +19,8 @@ var timeFontSize = 95 * pixelRatio;
 var bylineFontSize = 45 * pixelRatio;
 var bylineSpacing = 60 * pixelRatio;
 var audioPlaying = false;
-var dayMusic = new Audio("/sounds/unitock.mp3");
-var nightMusic = new Audio("/sounds/unitocknight.mp3");
+var dayMusic = new Audio("sounds/unitock.mp3");
+var nightMusic = new Audio("sounds/unitocknight.mp3");
 dayMusic.loop = true;
 nightMusic.loop = true;
 
@@ -41,7 +41,7 @@ function updateScreen()
         dayMusic.pause();
         nightMusic.play();
     }
-    
+
     date = new Date();
     hr = date.getHours();
     min = date.getMinutes();
