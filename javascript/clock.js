@@ -151,7 +151,7 @@ function updateScreen()
                     xPos=0;
                     yPos=0;
                     animationPos=1;
-                    cancelRequestAnimationFrame(animationId);
+                    cancelAnimationFrame(animationId);
                 }
                 break;
             case 1:
@@ -162,7 +162,7 @@ function updateScreen()
                     xPos=0;
                     yPos=-ctx.canvas.height;
                     animationPos=2;
-                    cancelRequestAnimationFrame(animationId);
+                    cancelAnimationFrame(animationId);
                 }
                 break;
             case 2:
@@ -173,7 +173,7 @@ function updateScreen()
                     xPos=0;
                     yPos=0;
                     animationPos=3;
-                    cancelRequestAnimationFrame(animationId);
+                    cancelAnimationFrame(animationId);
                 }
                 break;
             case 3:
@@ -184,7 +184,7 @@ function updateScreen()
                     xPos=0;
                     yPos=ctx.canvas.height;
                     animationPos=0;
-                    cancelRequestAnimationFrame(animationId);
+                    cancelAnimationFrame(animationId);
                 }
                 break;
             case 4:
@@ -192,7 +192,7 @@ function updateScreen()
                 {
                     animationPos=1;
                 }
-                cancelRequestAnimationFrame(animationId);
+                cancelAnimationFrame(animationId);
                 break;
             default:
                 animationPos=0;
