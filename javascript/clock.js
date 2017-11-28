@@ -1,27 +1,39 @@
-var pixelRatio = getPixelRatio();
-var c = document.getElementById("clock");
-var ctx = c.getContext("2d");
-ctx.canvas.width  = window.innerWidth * pixelRatio;
-ctx.canvas.height = window.innerHeight * pixelRatio;
-ctx.canvas.style.width  = window.innerWidth + "px";
-ctx.canvas.style.height = window.innerHeight + "px";
+var pixelRatio = window.devicePixelRatio || 1;
+var canvas = document.getElementById("clock");
+var ctx = canvas.getContext("2d");
+var canvasDimensions;
+initCanvas();
 
 var animationPos=0;
 var xPos=0;
-var yPos=ctx.canvas.height;
+var yPos=canvasDimensions.height;
 
 var date, hr, min, sec, time;
 var timeOfDay = 0;
 var clockPaused;
 var animationId;
-var animationSpeed = 90 * pixelRatio;
-var timeFontSize = 95 * pixelRatio;
-var bylineFontSize = 45 * pixelRatio;
-var bylineSpacing = 60 * pixelRatio;
+var animationSpeed = 90;
+var timeFontSize = 95;
+var bylineFontSize = 45;
+var bylineSpacing = 60;
 var audioPlaying = false;
 var musicInitialized = false;
 var dayMusic;
 var nightMusic;
+
+function initCanvas()
+{
+    canvasDimensions = {
+        width: window.innerWidth,
+        height: window.innerHeight
+    };
+
+    ctx.canvas.width  = canvasDimensions.width * pixelRatio;
+    ctx.canvas.height = canvasDimensions.height * pixelRatio;
+    ctx.canvas.style.width  = canvasDimensions.width + "px";
+    ctx.canvas.style.height = canvasDimensions.height + "px";
+    ctx.scale(pixelRatio, pixelRatio);
+}
 
 function runClock()
 {
@@ -93,7 +105,7 @@ function updateScreen()
 
     function moveScreen()
     {
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
 
         switch (timeOfDay)
         {
@@ -113,7 +125,7 @@ function updateScreen()
                 ctx.fillStyle = "#145ECF";
         }
 
-        ctx.fillRect(xPos,yPos,ctx.canvas.width,ctx.canvas.height+animationSpeed);
+        ctx.fillRect(xPos,yPos,canvasDimensions.width,canvasDimensions.height+animationSpeed);
 
         if (animationPos===0||animationPos===2||animationPos===4)
         {
@@ -136,9 +148,9 @@ function updateScreen()
 
         ctx.font = "bold " + timeFontSize + "px Arial";
         ctx.textAlign = "center";
-        ctx.fillText(time, ctx.canvas.width/2, ctx.canvas.height/2);
+        ctx.fillText(time, canvasDimensions.width/2, canvasDimensions.height/2);
         ctx.font = bylineFontSize + "px Arial";
-        ctx.fillText("samrum", ctx.canvas.width/2, (ctx.canvas.height/2)+bylineSpacing);
+        ctx.fillText("samrum", canvasDimensions.width/2, (canvasDimensions.height/2)+bylineSpacing);
 
         switch (animationPos)
         {
@@ -156,10 +168,10 @@ function updateScreen()
             case 1:
                 xPos += animationSpeed;
 
-                if (xPos > ctx.canvas.width+animationSpeed)
+                if (xPos > canvasDimensions.width+animationSpeed)
                 {
                     xPos=0;
-                    yPos=-ctx.canvas.height;
+                    yPos=-canvasDimensions.height;
                     animationPos=2;
                     return;
                 }
@@ -178,10 +190,10 @@ function updateScreen()
             case 3:
                 xPos -= animationSpeed;
 
-                if (xPos < -ctx.canvas.width-animationSpeed)
+                if (xPos < -canvasDimensions.width-animationSpeed)
                 {
                     xPos=0;
-                    yPos=ctx.canvas.height;
+                    yPos=canvasDimensions.height;
                     animationPos=0;
                     return;
                 }
@@ -252,25 +264,6 @@ function toggleMusic()
     }
 }
 
-function getPixelRatio()
-{
-    if (window.devicePixelRatio > 1 && !isMobile())
-    {
-        var ctest = document.createElement("canvas").getContext("2d"),
-            dpr = window.devicePixelRatio || 1,
-            bsr = ctest.webkitBackingStorePixelRatio ||
-                  ctest.mozBackingStorePixelRatio ||
-                  ctest.msBackingStorePixelRatio ||
-                  ctest.oBackingStorePixelRatio ||
-                  ctest.backingStorePixelRatio || 1;
-        return dpr / bsr;
-    }
-    else
-    {
-        return 1;
-    }
-}
-
 function isMobile()
 {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -286,12 +279,6 @@ window.onfocus = function()
     clockPaused = false;
 };
 
-window.onresize = function()
-{
-    ctx.canvas.width  = window.innerWidth * pixelRatio;
-    ctx.canvas.height = window.innerHeight * pixelRatio;
-    ctx.canvas.style.width  = window.innerWidth + "px";
-    ctx.canvas.style.height = window.innerHeight + "px";
-};
+window.onresize = initCanvas;
 
-window.onload = runClock();
+window.onload = runClock;
