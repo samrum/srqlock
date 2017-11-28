@@ -96,11 +96,25 @@ function updateScreen()
         if (timeOfDay === 3 && musicTracks.night.readyState >= 3)
         {
             musicTracks.day.pause();
+
+            if (musicTracks.night.muted)
+            {
+                musicTracks.night.currentTime = 0;
+                musicTracks.night.muted = false;
+            }
+
             musicTracks.night.play();
         }
         else if (musicTracks.day.readyState >= 3)
         {
             musicTracks.night.pause();
+
+            if (musicTracks.day.muted)
+            {
+                musicTracks.day.currentTime = 0;
+                musicTracks.day.muted = false;
+            }
+
             musicTracks.day.play();
         }
     }
@@ -218,6 +232,9 @@ function getTimeDisplay(hr, min, sec)
 
 function getDisplayProperties(timeOfDay, animationPosition)
 {
+    var backgroundColor;
+    var textColor;
+
     switch (timeOfDay)
     {
         case 0:
@@ -236,7 +253,7 @@ function getDisplayProperties(timeOfDay, animationPosition)
             backgroundColor = "#145ECF";
     }
 
-    if (animationPosition === 0 || animationPosition === 2|| animationPosition === 4)
+    if (animationPosition === 0 || animationPosition === 2 || animationPosition === 4)
     {
         textColor = "#FFFFFF";
     }
@@ -271,7 +288,8 @@ function toggleMusic()
         }
         else
         {
-            musicTracks[track].preload = 'auto';
+            musicTracks[track].muted = true;
+            musicTracks[track].play();
         }
     });
 
