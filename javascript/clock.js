@@ -7,6 +7,10 @@ var clockPaused = false;
 var audioPlaying = false;
 var musicTracks = getMusicTracks();
 
+var xPos = 0;
+var yPos = canvasDimensions.height;
+var animationPosition = 0;
+
 function getMusicTracks()
 {
     var tracksObject = {};
@@ -55,9 +59,6 @@ function runClock()
 function updateScreen()
 {
     var timeOfDay = 0;
-    var xPos = 0;
-    var yPos = canvasDimensions.height;
-    var animationPosition = 0;
     var date, hr, min, sec;
     var timeDisplay;
     var animationSpeed = 90;
