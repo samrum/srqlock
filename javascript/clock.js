@@ -19,10 +19,9 @@ var timeFontSize = 95 * pixelRatio;
 var bylineFontSize = 45 * pixelRatio;
 var bylineSpacing = 60 * pixelRatio;
 var audioPlaying = false;
-var dayMusic = new Audio("sounds/unitock.mp3");
-var nightMusic = new Audio("sounds/unitocknight.mp3");
-dayMusic.loop = true;
-nightMusic.loop = true;
+var musicInitialized = false;
+var dayMusic;
+var nightMusic;
 
 function runClock()
 {
@@ -207,6 +206,15 @@ function updateScreen()
 
 function toggleMusic()
 {
+    if (!musicInitialized)
+    {
+        dayMusic = new Audio("sounds/unitock.mp3");
+        nightMusic = new Audio("sounds/unitocknight.mp3");
+        dayMusic.loop = true;
+        nightMusic.loop = true;
+        musicInitialized = true;
+    }
+
     if (audioPlaying)
     {
         if (timeOfDay!==3)
