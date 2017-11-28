@@ -14,7 +14,7 @@ var date, hr, min, sec, time;
 var timeOfDay = 0;
 var clockPaused;
 var animationId;
-var animationSpeed = 100 * pixelRatio;
+var animationSpeed = 90 * pixelRatio;
 var timeFontSize = 95 * pixelRatio;
 var bylineFontSize = 45 * pixelRatio;
 var bylineSpacing = 60 * pixelRatio;
