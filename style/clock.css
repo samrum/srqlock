@@ -1,12 +1,13 @@
 html, body {
     width: 100%;
     height: 100%;
-    margin: 0px;
+    margin: 0;
 }
 
 #clockTime {
     position: absolute;
     top: 0;
+    left: 0;
 }
 
 #clockBackground {
@@ -18,7 +19,6 @@ html, body {
     left: -5px;
     padding: 16px 16px;
     position: absolute;
-    z-index: 2;
     background-color: #fff;
     color: #fff;
     border: none;
