@@ -1,5 +1,5 @@
-var canvas = document.getElementById("clock");
-var ctx = canvas.getContext("2d");
+var backgroundContext = document.getElementById("clockBackground").getContext("2d");
+var timeContext = document.getElementById("clockTime").getContext("2d");
 var canvasDimensions;
 initCanvas();
 
@@ -44,11 +44,17 @@ function initCanvas()
         height: window.innerHeight
     };
 
-    ctx.canvas.width  = canvasDimensions.width * pixelRatio;
-    ctx.canvas.height = canvasDimensions.height * pixelRatio;
-    ctx.canvas.style.width  = canvasDimensions.width + "px";
-    ctx.canvas.style.height = canvasDimensions.height + "px";
-    ctx.scale(pixelRatio, pixelRatio);
+    backgroundContext.canvas.width  = canvasDimensions.width * pixelRatio;
+    backgroundContext.canvas.height = canvasDimensions.height * pixelRatio;
+    backgroundContext.canvas.style.width  = canvasDimensions.width + "px";
+    backgroundContext.canvas.style.height = canvasDimensions.height + "px";
+    backgroundContext.scale(pixelRatio, pixelRatio);
+
+    timeContext.canvas.width  = canvasDimensions.width * pixelRatio;
+    timeContext.canvas.height = canvasDimensions.height * pixelRatio;
+    timeContext.canvas.style.width  = canvasDimensions.width + "px";
+    timeContext.canvas.style.height = canvasDimensions.height + "px";
+    timeContext.scale(pixelRatio, pixelRatio);
 }
 
 function runClock()
@@ -59,88 +65,32 @@ function runClock()
 function updateScreen()
 {
     var timeOfDay = 0;
-    var date, hr, min, sec;
-    var timeDisplay;
-    var animationSpeed = 90;
-    var timeFontSize = 95;
-    var bylineFontSize = 45;
-    var bylineSpacing = 60;
+    var date = new Date();
     var displayProperties;
 
-    date = new Date();
-    hr = date.getHours();
-    min = date.getMinutes();
-    sec = date.getSeconds();
+    timeOfDay = getTimeOfDay(date.getHours());
 
-    if (hr < 6 || hr > 22)
+    if (timeOfDay === 3)
     {
-        timeOfDay = 3;
         animationPosition = 4;
-        xPos=0;
-        yPos=0;
-    }
-    else if (hr < 11)
-    {
-        timeOfDay = 0;
-    }
-    else if (hr > 10 && hr < 18)
-    {
-        timeOfDay = 1;
-    }
-    else
-    {
-        timeOfDay = 2;
+        xPos = 0;
+        yPos = 0;
     }
 
-    if (audioPlaying)
-    {
-        if (timeOfDay === 3 && musicTracks.night.readyState >= 3)
-        {
-            musicTracks.day.pause();
-
-            if (musicTracks.night.muted)
-            {
-                musicTracks.night.currentTime = 0;
-                musicTracks.night.muted = false;
-            }
-
-            musicTracks.night.play();
-        }
-        else if (musicTracks.day.readyState >= 3)
-        {
-            musicTracks.night.pause();
-
-            if (musicTracks.day.muted)
-            {
-                musicTracks.day.currentTime = 0;
-                musicTracks.day.muted = false;
-            }
-
-            musicTracks.day.play();
-        }
-    }
+    updateMusic(timeOfDay);
 
     displayProperties = getDisplayProperties(timeOfDay, animationPosition);
 
-    document.getElementById("music").style.backgroundColor = displayProperties.backgroundColor;
-    document.body.style.backgroundColor = displayProperties.backgroundColor;
-
-    timeDisplay = getTimeDisplay(hr, min, sec);
+    updateUIElements(displayProperties, date);
 
     function moveScreen()
     {
-        ctx.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
+        var animationSpeed = 90;
 
-        ctx.fillStyle = displayProperties.backgroundColor;
-        ctx.fillRect(xPos,yPos,canvasDimensions.width,canvasDimensions.height+animationSpeed);
+        backgroundContext.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
 
-        ctx.fillStyle = displayProperties.textColor;
-
-        ctx.font = "bold " + timeFontSize + "px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText(timeDisplay, canvasDimensions.width/2, canvasDimensions.height/2);
-        ctx.font = bylineFontSize + "px Arial";
-        ctx.fillText("samrum", canvasDimensions.width/2, (canvasDimensions.height/2)+bylineSpacing);
+        backgroundContext.fillStyle = displayProperties.backgroundColor;
+        backgroundContext.fillRect(xPos,yPos,canvasDimensions.width,canvasDimensions.height+animationSpeed);
 
         switch (animationPosition)
         {
@@ -188,15 +138,8 @@ function updateScreen()
                     return;
                 }
                 break;
-            case 4:
-                if (hr > 5 && (hr!==11 && hr!==12))
-                {
-                    animationPosition=1;
-                }
-                return;
-                break;
             default:
-                animationPosition=0;
+                return;
         }
 
         requestAnimationFrame(moveScreen);
@@ -207,15 +150,58 @@ function updateScreen()
     }
 }
 
-function getTimeDisplay(hr, min, sec)
+function updateUIElements(displayProperties, date)
 {
-    if (hr === 0)
+    var timeFontSize = 95;
+    var bylineFontSize = 45;
+    var bylineSpacing = 60;
+
+    document.getElementById("music").style.backgroundColor = displayProperties.backgroundColor;
+    document.body.style.backgroundColor = displayProperties.backgroundColor;
+
+    timeContext.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
+    timeContext.fillStyle = displayProperties.textColor;
+
+    timeContext.font = "bold " + timeFontSize + "px Arial";
+    timeContext.textAlign = "center";
+    timeContext.fillText(getTimeDisplay(date), canvasDimensions.width/2, canvasDimensions.height/2);
+    timeContext.font = bylineFontSize + "px Arial";
+    timeContext.fillText("samrum", canvasDimensions.width/2, (canvasDimensions.height/2)+bylineSpacing);
+}
+
+function getTimeOfDay(hour)
+{
+    var timeOfDay = 2;
+
+    if (hour < 6 || hour > 22)
     {
-        hr = 12;
+        timeOfDay = 3;
     }
-    else if (hr > 12)
+    else if (hour < 11)
     {
-        hr = hr - 12;
+        timeOfDay = 0;
+    }
+    else if (hour > 10 && hour < 18)
+    {
+        timeOfDay = 1;
+    }
+
+    return timeOfDay;
+}
+
+function getTimeDisplay(date)
+{
+    var hour = date.getHours();
+    var min = date.getMinutes();
+    var sec = date.getSeconds();
+
+    if (hour === 0)
+    {
+        hour = 12;
+    }
+    else if (hour > 12)
+    {
+        hour = hour - 12;
     }
 
     if (min < 10)
@@ -228,7 +214,7 @@ function getTimeDisplay(hr, min, sec)
         sec = "0" + sec;
     }
 
-    return hr + " " + min + " " + sec;
+    return hour + " " + min + " " + sec;
 }
 
 function getDisplayProperties(timeOfDay, animationPosition)
@@ -295,6 +281,37 @@ function toggleMusic()
     });
 
     audioPlaying = !audioPlaying
+}
+
+function updateMusic(timeOfDay)
+{
+    if (audioPlaying)
+    {
+        if (timeOfDay === 3 && musicTracks.night.readyState >= 3)
+        {
+            musicTracks.day.pause();
+
+            if (musicTracks.night.muted)
+            {
+                musicTracks.night.currentTime = 0;
+                musicTracks.night.muted = false;
+            }
+
+            musicTracks.night.play();
+        }
+        else if (musicTracks.day.readyState >= 3)
+        {
+            musicTracks.night.pause();
+
+            if (musicTracks.day.muted)
+            {
+                musicTracks.day.currentTime = 0;
+                musicTracks.day.muted = false;
+            }
+
+            musicTracks.day.play();
+        }
+    }
 }
 
 window.onblur = function()

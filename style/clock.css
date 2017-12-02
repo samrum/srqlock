@@ -1,23 +1,26 @@
 html, body {
-    width:  100%;
+    width: 100%;
     height: 100%;
     margin: 0px;
 }
 
-canvas {
-    background-color: white;
-    vertical-align: bottom;
-    z-index: 1;
+#clockTime {
+    position: absolute;
+    top: 0;
+}
+
+#clockBackground {
+    background-color: #fff;
 }
 
 #music {
     top: 25%;
     left: -5px;
-    padding:16px 16px;
+    padding: 16px 16px;
     position: absolute;
     z-index: 2;
-    background-color:#FFFFFF;
-    color:#FFFFFF;
-    border:none;
+    background-color: #fff;
+    color: #fff;
+    border: none;
     outline: none;
 }
