@@ -125,7 +125,7 @@ function animateBackground(displayProperties, coordinates)
         case 1:
             coordinates.x += animationSpeed;
 
-            if (coordinates.x >= 0)
+            if (coordinates.x >= animationSpeed)
             {
                 backgroundPosition++;
             }
@@ -141,7 +141,7 @@ function animateBackground(displayProperties, coordinates)
         case 3:
             coordinates.x -= animationSpeed;
 
-            if (coordinates.x <= 0)
+            if (coordinates.x <= -animationSpeed)
             {
                 backgroundPosition = 0;
             }
