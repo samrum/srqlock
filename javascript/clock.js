@@ -7,6 +7,13 @@ var backgroundPosition = 0;
 
 var musicTracks = initMusicTracks();
 
+const timesOfDay = {
+    morning: 0,
+    afternoon: 1,
+    evening: 2,
+    night: 3
+};
+
 function initMusicTracks()
 {
     var tracksObject = {};
@@ -64,21 +71,16 @@ function initClock()
 
 function updateScreen()
 {
-    var timeOfDay = 0;
     var date = new Date();
-    var displayProperties;
-
-    timeOfDay = getTimeOfDay(date.getHours());
+    var timeOfDay = getTimeOfDay(date.getHours());
+    var displayProperties = getDisplayProperties(timeOfDay);
 
     updateMusic(timeOfDay);
-
-    displayProperties = getDisplayProperties(timeOfDay);
-
     updateUIElements(displayProperties, date);
 
     if (!clockPaused)
     {
-        if (timeOfDay === 3)
+        if (timeOfDay === timesOfDay.night)
         {
             renderBackground(displayProperties.backgroundColor);
         }
@@ -115,7 +117,7 @@ function animateBackground(displayProperties, coordinates)
 
             if (coordinates.y <= -animationSpeed)
             {
-                backgroundPosition=1;
+                backgroundPosition++;
             }
             break;
         case 1:
@@ -123,7 +125,7 @@ function animateBackground(displayProperties, coordinates)
 
             if (coordinates.x > canvasDimensions.width+animationSpeed)
             {
-                backgroundPosition=2;
+                backgroundPosition++;
             }
             break;
         case 2:
@@ -131,7 +133,7 @@ function animateBackground(displayProperties, coordinates)
 
             if (coordinates.y >= 0)
             {
-                backgroundPosition=3;
+                backgroundPosition++;
             }
             break;
         case 3:
@@ -139,7 +141,7 @@ function animateBackground(displayProperties, coordinates)
 
             if (coordinates.x < -canvasDimensions.width-animationSpeed)
             {
-                backgroundPosition=0;
+                backgroundPosition = 0;
             }
             break;
         default:
@@ -154,21 +156,14 @@ function animateBackground(displayProperties, coordinates)
 
 function getBackgroundStartingCoordinates()
 {
-    var coordinates;
+    var coordinates = {
+        x: 0,
+        y: 0
+    };
 
     if ([0, 2].indexOf(backgroundPosition) >= 0)
     {
-        coordinates = {
-            x: 0,
-            y: canvasDimensions.height * (backgroundPosition > 0 ? -1 : 1)
-        }
-    }
-    else if ([1, 3].indexOf(backgroundPosition) >= 0)
-    {
-        coordinates = {
-            x: 0,
-            y: 0
-        }
+        coordinates.y = canvasDimensions.height * (backgroundPosition > 0 ? -1 : 1)
     }
 
     return coordinates;
@@ -195,19 +190,19 @@ function updateUIElements(displayProperties, date)
 
 function getTimeOfDay(hour)
 {
-    var timeOfDay = 2;
+    var timeOfDay = timesOfDay.evening;
 
     if (hour < 6 || hour > 22)
     {
-        timeOfDay = 3;
+        timeOfDay = timesOfDay.night;
     }
     else if (hour < 11)
     {
-        timeOfDay = 0;
+        timeOfDay = timesOfDay.morning;
     }
     else if (hour > 10 && hour < 18)
     {
-        timeOfDay = 1;
+        timeOfDay = timesOfDay.afternoon;
     }
 
     return timeOfDay;
@@ -248,16 +243,16 @@ function getDisplayProperties(timeOfDay)
 
     switch (timeOfDay)
     {
-        case 0:
+        case timesOfDay.morning:
             backgroundColor = "#568BDD";
             break;
-        case 1:
+        case timesOfDay.afternoon:
             backgroundColor = "#145ECF";
             break;
-        case 2:
+        case timesOfDay.evening:
             backgroundColor = "#285EB0";
             break;
-        case 3:
+        case timesOfDay.night:
             backgroundColor = "#0C387C";
             break;
         default:
@@ -272,10 +267,10 @@ function getDisplayProperties(timeOfDay)
     {
         switch (timeOfDay)
         {
-            case 1:
+            case timesOfDay.afternoon:
                 textColor = "#145ECF";
                 break;
-            case 2:
+            case timesOfDay.evening:
                 textColor = "#285EB8";
                 break;
             default:
@@ -310,7 +305,7 @@ function updateMusic(timeOfDay)
 {
     if (audioPlaying)
     {
-        if (timeOfDay === 3 && musicTracks.night.readyState >= 3)
+        if (timeOfDay === timesOfDay.night && musicTracks.night.readyState >= 3)
         {
             musicTracks.day.pause();
 
