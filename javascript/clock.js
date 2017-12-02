@@ -1,6 +1,6 @@
 var backgroundContext = document.getElementById("clockBackground").getContext("2d");
 var timeContext = document.getElementById("clockTime").getContext("2d");
-var canvasDimensions;
+var canvasDimensions, animationSpeeds;
 var clockPaused = false;
 var audioPlaying = false;
 var backgroundPosition = 0;
@@ -51,6 +51,11 @@ function initCanvas()
         height: window.innerHeight
     };
 
+    animationSpeeds = {
+        x: (canvasDimensions.width / 60) * 2,
+        y: (canvasDimensions.height / 60) * 2
+    };
+
     Object.keys(contexts).forEach(function(contextType) {
         var canvas = contexts[contextType].canvas;
 
@@ -91,24 +96,21 @@ function updateScreen()
     }
 }
 
-function renderBackground(color, coordinates, animationOffset)
+function renderBackground(color, coordinates)
 {
     coordinates = coordinates || {x: 0, y: 0};
-    animationOffset = animationOffset || 0;
 
-    backgroundContext.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
-
-    backgroundContext.fillStyle = color;
-    backgroundContext.fillRect(coordinates.x, coordinates.y, canvasDimensions.width, canvasDimensions.height + animationOffset);
+    backgroundContext.fillStyle = [0, 2].indexOf(backgroundPosition) >=0 ? color : '#fff';
+    backgroundContext.fillRect(coordinates.x, coordinates.y, canvasDimensions.width, canvasDimensions.height);
 }
 
 function animateBackground(displayProperties, coordinates)
 {
-    var animationSpeed = 90;
+    var animationSpeed = [0, 2].indexOf(backgroundPosition) >= 0 ? animationSpeeds.y : animationSpeeds.x;
     var initialBackgroundPosition = backgroundPosition;
     coordinates = coordinates || getBackgroundStartingCoordinates();
 
-    renderBackground(displayProperties.backgroundColor, coordinates, animationSpeed);
+    renderBackground(displayProperties.backgroundColor, coordinates);
 
     switch (backgroundPosition)
     {
@@ -123,7 +125,7 @@ function animateBackground(displayProperties, coordinates)
         case 1:
             coordinates.x += animationSpeed;
 
-            if (coordinates.x > canvasDimensions.width+animationSpeed)
+            if (coordinates.x >= 0)
             {
                 backgroundPosition++;
             }
@@ -131,7 +133,7 @@ function animateBackground(displayProperties, coordinates)
         case 2:
             coordinates.y += animationSpeed;
 
-            if (coordinates.y >= 0)
+            if (coordinates.y >= animationSpeed)
             {
                 backgroundPosition++;
             }
@@ -139,7 +141,7 @@ function animateBackground(displayProperties, coordinates)
         case 3:
             coordinates.x -= animationSpeed;
 
-            if (coordinates.x < -canvasDimensions.width-animationSpeed)
+            if (coordinates.x <= 0)
             {
                 backgroundPosition = 0;
             }
@@ -161,9 +163,13 @@ function getBackgroundStartingCoordinates()
         y: 0
     };
 
-    if ([0, 2].indexOf(backgroundPosition) >= 0)
+    if ([1, 3].indexOf(backgroundPosition) >= 0)
     {
-        coordinates.y = canvasDimensions.height * (backgroundPosition > 0 ? -1 : 1)
+        coordinates.x = canvasDimensions.width * (backgroundPosition === 1 ? -1: 1);
+    }
+    else if ([0, 2].indexOf(backgroundPosition) >= 0)
+    {
+        coordinates.y = canvasDimensions.height * (backgroundPosition === 0 ? 1 : -1)
     }
 
     return coordinates;
@@ -259,7 +265,7 @@ function getDisplayProperties(timeOfDay)
             backgroundColor = "#145ECF";
     }
 
-    if (backgroundPosition === 0 || backgroundPosition === 2 || backgroundPosition === 4)
+    if ([0, 2].indexOf(backgroundPosition) >= 0)
     {
         textColor = "#FFFFFF";
     }
