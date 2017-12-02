@@ -1,17 +1,13 @@
 var backgroundContext = document.getElementById("clockBackground").getContext("2d");
 var timeContext = document.getElementById("clockTime").getContext("2d");
 var canvasDimensions;
-initCanvas();
-
 var clockPaused = false;
 var audioPlaying = false;
-var musicTracks = getMusicTracks();
+var backgroundPosition = 0;
 
-var xPos = 0;
-var yPos = canvasDimensions.height;
-var animationPosition = 0;
+var musicTracks = initMusicTracks();
 
-function getMusicTracks()
+function initMusicTracks()
 {
     var tracksObject = {};
     var musicTracks = [
@@ -38,28 +34,32 @@ function getMusicTracks()
 function initCanvas()
 {
     var pixelRatio = window.devicePixelRatio || 1;
+    var contexts = {
+        background: backgroundContext,
+        time: timeContext
+    };
 
     canvasDimensions = {
         width: window.innerWidth,
         height: window.innerHeight
     };
 
-    backgroundContext.canvas.width  = canvasDimensions.width * pixelRatio;
-    backgroundContext.canvas.height = canvasDimensions.height * pixelRatio;
-    backgroundContext.canvas.style.width  = canvasDimensions.width + "px";
-    backgroundContext.canvas.style.height = canvasDimensions.height + "px";
-    backgroundContext.scale(pixelRatio, pixelRatio);
+    Object.keys(contexts).forEach(function(contextType) {
+        var canvas = contexts[contextType].canvas;
 
-    timeContext.canvas.width  = canvasDimensions.width * pixelRatio;
-    timeContext.canvas.height = canvasDimensions.height * pixelRatio;
-    timeContext.canvas.style.width  = canvasDimensions.width + "px";
-    timeContext.canvas.style.height = canvasDimensions.height + "px";
-    timeContext.scale(pixelRatio, pixelRatio);
+        canvas.width = canvasDimensions.width * pixelRatio;
+        canvas.height = canvasDimensions.height * pixelRatio;
+        canvas.style.width = canvasDimensions.width + "px";
+        canvas.style.height = canvasDimensions.height + "px";
+        contexts[contextType].scale(pixelRatio, pixelRatio);
+    });
 }
 
-function runClock()
+function initClock()
 {
-    setInterval(updateScreen,1000);
+    initCanvas();
+    updateScreen();
+    setInterval(updateScreen, 1000);
 }
 
 function updateScreen()
@@ -70,84 +70,108 @@ function updateScreen()
 
     timeOfDay = getTimeOfDay(date.getHours());
 
-    if (timeOfDay === 3)
-    {
-        animationPosition = 4;
-        xPos = 0;
-        yPos = 0;
-    }
-
     updateMusic(timeOfDay);
 
-    displayProperties = getDisplayProperties(timeOfDay, animationPosition);
+    displayProperties = getDisplayProperties(timeOfDay);
 
     updateUIElements(displayProperties, date);
 
-    function moveScreen()
-    {
-        var animationSpeed = 90;
-
-        backgroundContext.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
-
-        backgroundContext.fillStyle = displayProperties.backgroundColor;
-        backgroundContext.fillRect(xPos,yPos,canvasDimensions.width,canvasDimensions.height+animationSpeed);
-
-        switch (animationPosition)
-        {
-            case 0:
-                yPos -= animationSpeed;
-
-                if (yPos <= -animationSpeed)
-                {
-                    xPos=0;
-                    yPos=0;
-                    animationPosition=1;
-                    return;
-                }
-                break;
-            case 1:
-                xPos += animationSpeed;
-
-                if (xPos > canvasDimensions.width+animationSpeed)
-                {
-                    xPos=0;
-                    yPos=-canvasDimensions.height;
-                    animationPosition=2;
-                    return;
-                }
-                break;
-            case 2:
-                yPos += animationSpeed;
-
-                if (yPos >= 0)
-                {
-                    xPos=0;
-                    yPos=0;
-                    animationPosition=3;
-                    return;
-                }
-                break;
-            case 3:
-                xPos -= animationSpeed;
-
-                if (xPos < -canvasDimensions.width-animationSpeed)
-                {
-                    xPos=0;
-                    yPos=canvasDimensions.height;
-                    animationPosition=0;
-                    return;
-                }
-                break;
-            default:
-                return;
-        }
-
-        requestAnimationFrame(moveScreen);
-    }
     if (!clockPaused)
     {
-        requestAnimationFrame(moveScreen);
+        if (timeOfDay === 3)
+        {
+            renderBackground(displayProperties.backgroundColor);
+        }
+        else
+        {
+            requestAnimationFrame(animateBackground.bind(this, displayProperties, null));
+        }
     }
+}
+
+function renderBackground(color, coordinates, animationOffset)
+{
+    coordinates = coordinates || {x: 0, y: 0};
+    animationOffset = animationOffset || 0;
+
+    backgroundContext.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
+
+    backgroundContext.fillStyle = color;
+    backgroundContext.fillRect(coordinates.x, coordinates.y, canvasDimensions.width, canvasDimensions.height + animationOffset);
+}
+
+function animateBackground(displayProperties, coordinates)
+{
+    var animationSpeed = 90;
+    var initialBackgroundPosition = backgroundPosition;
+    coordinates = coordinates || getBackgroundStartingCoordinates();
+
+    renderBackground(displayProperties.backgroundColor, coordinates, animationSpeed);
+
+    switch (backgroundPosition)
+    {
+        case 0:
+            coordinates.y -= animationSpeed;
+
+            if (coordinates.y <= -animationSpeed)
+            {
+                backgroundPosition=1;
+            }
+            break;
+        case 1:
+            coordinates.x += animationSpeed;
+
+            if (coordinates.x > canvasDimensions.width+animationSpeed)
+            {
+                backgroundPosition=2;
+            }
+            break;
+        case 2:
+            coordinates.y += animationSpeed;
+
+            if (coordinates.y >= 0)
+            {
+                backgroundPosition=3;
+            }
+            break;
+        case 3:
+            coordinates.x -= animationSpeed;
+
+            if (coordinates.x < -canvasDimensions.width-animationSpeed)
+            {
+                backgroundPosition=0;
+            }
+            break;
+        default:
+            return;
+    }
+
+    if (initialBackgroundPosition === backgroundPosition)
+    {
+        requestAnimationFrame(animateBackground.bind(this, displayProperties, coordinates));
+    }
+}
+
+function getBackgroundStartingCoordinates()
+{
+    var coordinates;
+
+    if ([0, 2].indexOf(backgroundPosition) >= 0)
+    {
+        coordinates = {
+            x: 0,
+            y: canvasDimensions.height * (backgroundPosition > 0 ? -1 : 1)
+        }
+    }
+    else if ([1, 3].indexOf(backgroundPosition) >= 0)
+    {
+        coordinates = {
+            x: 0,
+            y: 0
+        }
+    }
+
+    return coordinates;
 }
 
 function updateUIElements(displayProperties, date)
@@ -156,7 +180,7 @@ function updateUIElements(displayProperties, date)
     var bylineFontSize = 45;
     var bylineSpacing = 60;
 
-    document.getElementById("music").style.backgroundColor = displayProperties.backgroundColor;
+    document.getElementById('musicToggle').style.backgroundColor = displayProperties.backgroundColor;
     document.body.style.backgroundColor = displayProperties.backgroundColor;
 
     timeContext.clearRect(0, 0, canvasDimensions.width, canvasDimensions.height);
@@ -217,7 +241,7 @@ function getTimeDisplay(date)
     return hour + " " + min + " " + sec;
 }
 
-function getDisplayProperties(timeOfDay, animationPosition)
+function getDisplayProperties(timeOfDay)
 {
     var backgroundColor;
     var textColor;
@@ -240,7 +264,7 @@ function getDisplayProperties(timeOfDay, animationPosition)
             backgroundColor = "#145ECF";
     }
 
-    if (animationPosition === 0 || animationPosition === 2 || animationPosition === 4)
+    if (backgroundPosition === 0 || backgroundPosition === 2 || backgroundPosition === 4)
     {
         textColor = "#FFFFFF";
     }
@@ -265,8 +289,7 @@ function getDisplayProperties(timeOfDay, animationPosition)
     }
 }
 
-function toggleMusic()
-{
+document.getElementById('musicToggle').addEventListener('click', function(event) {
     Object.keys(musicTracks).forEach(function(track) {
         if (audioPlaying)
         {
@@ -281,7 +304,7 @@ function toggleMusic()
     });
 
     audioPlaying = !audioPlaying
-}
+}, false);
 
 function updateMusic(timeOfDay)
 {
@@ -326,4 +349,4 @@ window.onfocus = function()
 
 window.onresize = initCanvas;
 
-window.onload = runClock;
+window.onload = initClock;

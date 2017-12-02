@@ -13,7 +13,7 @@ html, body {
     background-color: #fff;
 }
 
-#music {
+#musicToggle {
     top: 25%;
     left: -5px;
     padding: 16px 16px;
