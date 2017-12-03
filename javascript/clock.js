@@ -91,7 +91,7 @@ function updateScreen()
         }
         else
         {
-            requestAnimationFrame(animateBackground.bind(this, displayProperties, null));
+            requestAnimationFrame(animateBackground.bind(this, displayProperties, getBackgroundStartingCoordinates()));
         }
     }
 }
@@ -106,51 +106,39 @@ function renderBackground(color, coordinates)
 
 function animateBackground(displayProperties, coordinates)
 {
-    var animationSpeed = [0, 2].indexOf(backgroundPosition) >= 0 ? animationSpeeds.y : animationSpeeds.x;
-    var initialBackgroundPosition = backgroundPosition;
-    coordinates = coordinates || getBackgroundStartingCoordinates();
+    var changingDimension = [0, 2].indexOf(backgroundPosition) >= 0 ? 'y' : 'x';
+    var animationSpeed = animationSpeeds[changingDimension];
+    var continueAnimation = true;
 
     renderBackground(displayProperties.backgroundColor, coordinates);
 
     switch (backgroundPosition)
     {
         case 0:
-            coordinates.y -= animationSpeed;
+        case 3:
+            coordinates[changingDimension] -= animationSpeed;
 
-            if (coordinates.y <= -animationSpeed)
+            if (coordinates[changingDimension] <= -animationSpeed)
             {
-                backgroundPosition++;
+                backgroundPosition = backgroundPosition == 0 | 0;
+                continueAnimation = false;
             }
             break;
         case 1:
-            coordinates.x += animationSpeed;
-
-            if (coordinates.x >= animationSpeed)
-            {
-                backgroundPosition++;
-            }
-            break;
         case 2:
-            coordinates.y += animationSpeed;
+            coordinates[changingDimension] += animationSpeed;
 
-            if (coordinates.y >= animationSpeed)
+            if (coordinates[changingDimension] >= animationSpeed)
             {
                 backgroundPosition++;
-            }
-            break;
-        case 3:
-            coordinates.x -= animationSpeed;
-
-            if (coordinates.x <= -animationSpeed)
-            {
-                backgroundPosition = 0;
+                continueAnimation = false;
             }
             break;
         default:
             return;
     }
 
-    if (initialBackgroundPosition === backgroundPosition)
+    if (continueAnimation)
     {
         requestAnimationFrame(animateBackground.bind(this, displayProperties, coordinates));
     }
