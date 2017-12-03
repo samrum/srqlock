@@ -11,17 +11,13 @@ body {
     left: 0;
 }
 
-#clockBackground {
-    background-color: #fff;
-}
-
 #musicToggle {
-    top: 25%;
-    left: -5px;
-    padding: 16px 16px;
     position: absolute;
-    background-color: #fff;
+    top: 25%;
+    left: 0;
+    padding: 16px;
     color: #fff;
     border: none;
     outline: none;
+    border-radius: 0px 5px 5px 0;
 }
