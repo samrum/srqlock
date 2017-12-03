@@ -1,3 +1,6 @@
+import dayMusic from './../sounds/unitock.mp3'
+import nightMusic from './../sounds/unitocknight.mp3'
+
 var backgroundContext = document.getElementById("clockBackground").getContext("2d");
 var timeContext = document.getElementById("clockTime").getContext("2d");
 var canvasDimensions, animationSpeeds;
@@ -20,11 +23,11 @@ function initMusicTracks()
     var musicTracks = [
         {
             name: 'day',
-            filePath: 'sounds/unitock.mp3'
+            filePath: dayMusic
         },
         {
             name: 'night',
-            filePath: 'sounds/unitocknight.mp3'
+            filePath: nightMusic
         }
     ];
 
@@ -339,3 +342,8 @@ window.onfocus = function()
 window.onresize = initCanvas;
 
 window.onload = initClock;
+
+if (module.hot)
+{
+    module.hot.accept();
+}

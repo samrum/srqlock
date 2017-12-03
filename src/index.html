@@ -4,13 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>srqlock</title>
-  <link rel="stylesheet" type="text/css" href="style/clock.css"/>
+
+  <% for (var css in htmlWebpackPlugin.files.css) { %>
+    <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
+  <% } %>
 </head>
 <body>
   <canvas id="clockBackground">This page requires the use of a modern browser!</canvas>
   <canvas id="clockTime"></canvas>
   <button id="musicToggle">Music</button>
-  <script type="text/javascript" src="javascript/clock.js">
-  </script>
+
+  <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+    <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+  <% } %>
 </body>
 </html>
