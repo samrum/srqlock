@@ -9,8 +9,8 @@ export default class Srqlock
     {
         this.transitionsPaused = false;
         this.transitionsDone = 0;
-        this.clockTime = 4;
-        this.contentTime = 5;
+        this.clockTime = 5;
+        this.contentTime = 6;
         this.musicManager = new MusicManager();
         this.background = new Background();
         this.foreground = new Foreground();

@@ -31,8 +31,8 @@ export default class Background
         };
 
         this.animationSpeeds = {
-            x: (this.canvasDimensions.width / 60) * 4,
-            y: (this.canvasDimensions.height / 60) * 4,
+            x: (this.canvasDimensions.width / 60) * 3.5,
+            y: (this.canvasDimensions.height / 60) * 3.5,
         };
 
         const { canvas } = this.canvasContext;
