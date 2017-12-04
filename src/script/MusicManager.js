@@ -87,4 +87,9 @@ export default class MusicManager
             }
         }
     }
+
+    tearDown()
+    {
+        document.getElementById('musicToggle').removeEventListener('click', this.toggleAudioPlaying.bind(this), false);
+    }
 }

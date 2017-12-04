@@ -1,10 +1,15 @@
 import Srqlock from './Srqlock';
 
-const srqlock = new Srqlock();
+let srqlock = new Srqlock();
 
 document.addEventListener('DOMContentLoaded', srqlock.init.bind(srqlock), false);
 
 if (module.hot)
 {
-    module.hot.accept();
+    module.hot.accept('./Srqlock', () =>
+    {
+        srqlock.tearDown();
+        srqlock = new Srqlock();
+        srqlock.init();
+    });
 }

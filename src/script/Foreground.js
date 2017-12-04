@@ -4,6 +4,8 @@ export default class Foreground
     {
         this.canvasContext = null;
         this.canvasDimensions = null;
+
+        this.canvasAnimationOffset = 100;
     }
 
     init()
@@ -38,6 +40,43 @@ export default class Foreground
         this.canvasContext.scale(pixelRatio, pixelRatio);
     }
 
+    clear()
+    {
+        this.canvasContext.clearRect(
+            0,
+            0,
+            this.canvasDimensions.width,
+            this.canvasDimensions.height,
+        );
+    }
+
+    updateCanvasPosition(backgroundPosition)
+    {
+        const offset = [1, 2].indexOf(backgroundPosition) >= 0 ? `-${this.canvasAnimationOffset}` : `${this.canvasAnimationOffset}`;
+        const location = [0, 2].indexOf(backgroundPosition) >= 0 ? 'top' : 'left';
+        document.getElementById('clockTime').style[location] = `${offset}%`;
+    }
+
+    renderAnimated(displayProps, timeString, backgroundPosition)
+    {
+        this.canvasAnimationOffset = 100;
+        this.render(displayProps, timeString);
+        this.updateCanvasPosition(backgroundPosition);
+
+        requestAnimationFrame(this.animateForeground.bind(this, backgroundPosition));
+    }
+
+    animateForeground(backgroundPosition)
+    {
+        this.canvasAnimationOffset = this.canvasAnimationOffset - 5;
+        this.updateCanvasPosition(backgroundPosition);
+
+        if (this.canvasAnimationOffset > 0)
+        {
+            requestAnimationFrame(this.animateForeground.bind(this, backgroundPosition));
+        }
+    }
+
     render(displayProps, timeString)
     {
         const timeFontSize = 95;
@@ -48,12 +87,7 @@ export default class Foreground
         document.getElementById('musicToggle').style.backgroundColor = backgroundColor;
         document.body.style.backgroundColor = backgroundColor;
 
-        this.canvasContext.clearRect(
-            0,
-            0,
-            this.canvasDimensions.width,
-            this.canvasDimensions.height,
-        );
+        this.clear();
         this.canvasContext.fillStyle = textColor;
 
         this.canvasContext.font = `bold ${timeFontSize}px Arial`;
@@ -65,5 +99,17 @@ export default class Foreground
         );
         this.canvasContext.font = `${bylineFontSize}px Arial`;
         this.canvasContext.fillText('samrum', this.canvasDimensions.width / 2, (this.canvasDimensions.height / 2) + bylineSpacing);
+    }
+
+    tearDown()
+    {
+        this.canvasContext.clearRect(
+            0,
+            0,
+            this.canvasDimensions.width,
+            this.canvasDimensions.height,
+        );
+
+        window.removeEventListener('resize', this.initCanvas.bind(this), false);
     }
 }

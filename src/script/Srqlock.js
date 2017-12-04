@@ -7,30 +7,33 @@ export default class Srqlock
 {
     constructor()
     {
-        this.clockPaused = false;
+        this.transitionsPaused = false;
+        this.transitionsDone = 0;
+        this.clockTime = 4;
+        this.contentTime = 5;
         this.musicManager = new MusicManager();
         this.background = new Background();
         this.foreground = new Foreground();
+        this.updateIntervalId = null;
     }
 
     init()
     {
-        document.addEventListener('blur', () =>
-        {
-            this.clockPaused = true;
-        }, false);
+        document.addEventListener('blur', this.setTransitionsPaused.bind(this, true), false);
 
-        document.addEventListener('focus', () =>
-        {
-            this.clockPaused = false;
-        }, false);
+        document.addEventListener('focus', this.setTransitionsPaused.bind(this, false), false);
 
         this.musicManager.init();
         this.background.init();
         this.foreground.init();
 
         this.updateScreen();
-        setInterval(this.updateScreen.bind(this), 1000);
+        this.updateIntervalId = setInterval(this.updateScreen.bind(this), 1000);
+    }
+
+    setTransitionsPaused(pause)
+    {
+        this.transitionsPaused = pause;
     }
 
     updateScreen()
@@ -42,10 +45,30 @@ export default class Srqlock
         const isNight = (timeOfDay === timesOfDay.night);
 
         this.musicManager.triggerMusic(isNight);
-        this.foreground.render(displayProperties, getFormattedTime(date));
 
-        if (!this.clockPaused)
+        if (this.transitionsDone === (this.clockTime + this.contentTime))
         {
+            this.transitionsDone = 0;
+            this.transitionsPaused = false;
+        }
+
+        if (!this.transitionsPaused)
+        {
+            if (this.transitionsDone === this.clockTime)
+            {
+                this.transitionsPaused = true;
+                displayProperties.backgroundColor = 'clear';
+                this.foreground.clear();
+            }
+            else if (this.transitionsDone === 0)
+            {
+                this.foreground.renderAnimated(displayProperties, getFormattedTime(date), this.background.getBackgroundPosition());
+            }
+            else
+            {
+                this.foreground.render(displayProperties, getFormattedTime(date));
+            }
+
             if (isNight)
             {
                 this.background.renderStatic(displayProperties.backgroundColor);
@@ -55,6 +78,8 @@ export default class Srqlock
                 this.background.renderAnimated(displayProperties.backgroundColor);
             }
         }
+
+        this.transitionsDone = this.transitionsDone + 1;
     }
 
     getDisplayProperties(timeOfDay)
@@ -103,5 +128,13 @@ export default class Srqlock
             textColor,
             backgroundColor,
         };
+    }
+
+    tearDown()
+    {
+        clearInterval(this.updateIntervalId);
+        this.background.tearDown();
+        this.foreground.tearDown();
+        this.musicManager.tearDown();
     }
 }

@@ -15,7 +15,7 @@ module.exports = merge(common, {
             presets: [
               ['env', {
                 targets: {
-                  "browsers": ["last 2 versions"]
+                  "browsers": ["> 5% in US"]
                 }
               }]
             ]

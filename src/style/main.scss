@@ -5,7 +5,7 @@ body {
     margin: 0;
 }
 
-#clockTime {
+canvas {
     position: absolute;
     top: 0;
     left: 0;
@@ -20,4 +20,20 @@ body {
     border: none;
     outline: none;
     border-radius: 0px 5px 5px 0;
+}
+
+#featuredContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(72, 101, 115, 0.8);;
+    color: #eaeaea;
+    font-size: 4em;
+    font-family: arial;
 }

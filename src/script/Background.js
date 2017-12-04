@@ -31,8 +31,8 @@ export default class Background
         };
 
         this.animationSpeeds = {
-            x: (this.canvasDimensions.width / 60) * 2,
-            y: (this.canvasDimensions.height / 60) * 2,
+            x: (this.canvasDimensions.width / 60) * 4,
+            y: (this.canvasDimensions.height / 60) * 4,
         };
 
         const { canvas } = this.canvasContext;
@@ -54,15 +54,32 @@ export default class Background
         this.renderBackground(color, { x: 0, y: 0 });
     }
 
-    renderBackground(color, coordinates)
+    clearBackground(coordinates)
     {
-        this.canvasContext.fillStyle = [0, 2].indexOf(this.backgroundPosition) >= 0 ? color : '#fff';
-        this.canvasContext.fillRect(
+        this.canvasContext.clearRect(
             coordinates.x,
             coordinates.y,
             this.canvasDimensions.width,
             this.canvasDimensions.height,
         );
+    }
+
+    renderBackground(color, coordinates)
+    {
+        if (color === 'clear')
+        {
+            this.clearBackground(this.backgroundLocation);
+        }
+        else
+        {
+            this.canvasContext.fillStyle = [0, 2].indexOf(this.backgroundPosition) >= 0 ? color : '#fff';
+            this.canvasContext.fillRect(
+                coordinates.x,
+                coordinates.y,
+                this.canvasDimensions.width,
+                this.canvasDimensions.height,
+            );
+        }
     }
 
     updateBackgroundLocation()
@@ -123,5 +140,17 @@ export default class Background
         {
             requestAnimationFrame(this.animateBackground.bind(this, backgroundColor));
         }
+    }
+
+    tearDown()
+    {
+        this.canvasContext.clearRect(
+            0,
+            0,
+            this.canvasDimensions.width,
+            this.canvasDimensions.height,
+        );
+
+        window.removeEventListener('resize', this.initCanvas.bind(this), false);
     }
 }
