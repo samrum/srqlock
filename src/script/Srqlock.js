@@ -19,21 +19,12 @@ export default class Srqlock
 
     init()
     {
-        document.addEventListener('blur', this.setTransitionsPaused.bind(this, true), false);
-
-        document.addEventListener('focus', this.setTransitionsPaused.bind(this, false), false);
-
         this.musicManager.init();
         this.background.init();
         this.foreground.init();
 
         this.updateScreen();
         this.updateIntervalId = setInterval(this.updateScreen.bind(this), 1000);
-    }
-
-    setTransitionsPaused(pause)
-    {
-        this.transitionsPaused = pause;
     }
 
     updateScreen()
@@ -54,19 +45,12 @@ export default class Srqlock
 
         if (!this.transitionsPaused)
         {
+            this.renderForeground(isNight, displayProperties, date);
+
             if (this.transitionsDone === this.clockTime)
             {
                 this.transitionsPaused = true;
                 displayProperties.backgroundColor = 'clear';
-                this.foreground.clear();
-            }
-            else if (this.transitionsDone === 0)
-            {
-                this.foreground.renderAnimated(displayProperties, getFormattedTime(date), this.background.getBackgroundPosition());
-            }
-            else
-            {
-                this.foreground.render(displayProperties, getFormattedTime(date));
             }
 
             if (isNight)
@@ -80,6 +64,31 @@ export default class Srqlock
         }
 
         this.transitionsDone = this.transitionsDone + 1;
+    }
+
+    renderForeground(isNight, displayProperties, date)
+    {
+        const formattedTime = getFormattedTime(date);
+
+        if (this.transitionsDone === this.clockTime)
+        {
+            if (isNight)
+            {
+                this.foreground.clear();
+            }
+            else
+            {
+                this.foreground.renderAnimated(false, displayProperties, formattedTime, this.background.getBackgroundPosition());
+            }
+        }
+        else if (this.transitionsDone === 0 && !isNight)
+        {
+            this.foreground.renderAnimated(true, displayProperties, formattedTime, this.background.getBackgroundPosition());
+        }
+        else
+        {
+            this.foreground.render(displayProperties, formattedTime, false);
+        }
     }
 
     getDisplayProperties(timeOfDay)

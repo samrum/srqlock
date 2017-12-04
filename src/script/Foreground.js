@@ -5,12 +5,14 @@ export default class Foreground
         this.canvasContext = null;
         this.canvasDimensions = null;
 
-        this.canvasAnimationOffset = 100;
+        this.canvasPositionOffset = 100;
     }
 
     init()
     {
-        this.canvasContext = document.getElementById('clockTime').getContext('2d');
+        this.canvas = document.getElementById('clockTime');
+        this.canvasContext = this.canvas.getContext('2d');
+        this.musicToggle = document.getElementById('musicToggle');
 
         this.initCanvas();
 
@@ -42,6 +44,9 @@ export default class Foreground
 
     clear()
     {
+        this.canvas.style.left = '0';
+        this.canvas.style.top = '0';
+
         this.canvasContext.clearRect(
             0,
             0,
@@ -50,45 +55,54 @@ export default class Foreground
         );
     }
 
-    updateCanvasPosition(backgroundPosition)
+    updateCanvasPosition(inwards, backgroundPosition)
     {
-        const offset = [1, 2].indexOf(backgroundPosition) >= 0 ? `-${this.canvasAnimationOffset}` : `${this.canvasAnimationOffset}`;
+        let offset = [1, 2].indexOf(backgroundPosition) >= 0 ? `-${this.canvasPositionOffset}` : `${this.canvasPositionOffset}`;
         const location = [0, 2].indexOf(backgroundPosition) >= 0 ? 'top' : 'left';
-        document.getElementById('clockTime').style[location] = `${offset}%`;
-    }
 
-    renderAnimated(displayProps, timeString, backgroundPosition)
-    {
-        this.canvasAnimationOffset = 100;
-        this.render(displayProps, timeString);
-        this.updateCanvasPosition(backgroundPosition);
-
-        requestAnimationFrame(this.animateForeground.bind(this, backgroundPosition));
-    }
-
-    animateForeground(backgroundPosition)
-    {
-        this.canvasAnimationOffset = this.canvasAnimationOffset - 5;
-        this.updateCanvasPosition(backgroundPosition);
-
-        if (this.canvasAnimationOffset > 0)
+        if (!inwards)
         {
-            requestAnimationFrame(this.animateForeground.bind(this, backgroundPosition));
+            offset *= -1;
+        }
+
+        this.canvas.style[location] = `${offset}%`;
+    }
+
+    renderAnimated(inwards, displayProps, timeString, backgroundPosition)
+    {
+        this.canvasPositionOffset = inwards ? 100 : 0;
+        this.render(displayProps, timeString, !inwards);
+
+        requestAnimationFrame(this.animateForeground.bind(this, inwards, backgroundPosition));
+    }
+
+    animateForeground(inwards, backgroundPosition)
+    {
+        this.updateCanvasPosition(inwards, backgroundPosition);
+        this.canvasPositionOffset = this.canvasPositionOffset - (inwards ? 5 : -5);
+
+        if (this.canvasPositionOffset >= 0 && this.canvasPositionOffset <= 100)
+        {
+            requestAnimationFrame(this.animateForeground.bind(this, inwards, backgroundPosition));
         }
     }
 
-    render(displayProps, timeString)
+    render(displayProps, timeString, keepFillStyle)
     {
         const timeFontSize = 95;
         const bylineFontSize = 45;
         const bylineSpacing = 60;
         const { backgroundColor, textColor } = displayProps;
 
-        document.getElementById('musicToggle').style.backgroundColor = backgroundColor;
+        this.musicToggle.style.backgroundColor = backgroundColor;
         document.body.style.backgroundColor = backgroundColor;
 
         this.clear();
-        this.canvasContext.fillStyle = textColor;
+
+        if (!keepFillStyle)
+        {
+            this.canvasContext.fillStyle = textColor;
+        }
 
         this.canvasContext.font = `bold ${timeFontSize}px Arial`;
         this.canvasContext.textAlign = 'center';
