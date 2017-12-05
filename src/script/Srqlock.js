@@ -45,9 +45,15 @@ export default class Srqlock
 
         if (!this.transitionsPaused)
         {
-            this.renderForeground(isNight, displayProperties, date);
-            this.renderBackground(isNight, displayProperties.backgroundColor);
             this.transitionsPaused = (this.transitionsDone === this.clockTime);
+
+            this.renderForeground(isNight, displayProperties, date);
+            this.background.render({
+                isNight,
+                showFeaturedContent: this.transitionsPaused,
+                hideFeaturedContent: this.transitionsDone === 1,
+                color: displayProperties.backgroundColor,
+            });
         }
 
         this.transitionsDone = this.transitionsDone + 1;
@@ -75,40 +81,6 @@ export default class Srqlock
         else
         {
             this.foreground.render(displayProperties, formattedTime, false);
-        }
-    }
-
-    renderBackground(isNight, backgroundColor)
-    {
-        if (this.transitionsDone === 1)
-        {
-            document.getElementById('featuredContent').style.display = 'none';
-        }
-
-        if (this.transitionsDone === this.clockTime)
-        {
-            document.getElementById('featuredContent').style.display = 'flex';
-
-            if (isNight)
-            {
-                this.background.hide();
-            }
-            else
-            {
-                this.background.renderAnimated(false, backgroundColor);
-            }
-        }
-        else if (this.transitionsDone === 0 && !isNight)
-        {
-            this.background.renderAnimated(true, backgroundColor);
-        }
-        else if (isNight)
-        {
-            this.background.render(backgroundColor);
-        }
-        else
-        {
-            this.background.renderAnimated(([0, 2].indexOf(this.background.getBackgroundPosition()) >= 0), backgroundColor);
         }
     }
 

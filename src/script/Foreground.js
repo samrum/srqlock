@@ -48,6 +48,7 @@ export default class Foreground
 
     clear()
     {
+        this.show();
         this.canvas.style.left = '0';
         this.canvas.style.top = '0';
 
@@ -100,7 +101,6 @@ export default class Foreground
 
         this.musicToggle.style.backgroundColor = backgroundColor;
 
-        this.show();
         this.clear();
 
         if (!keepFillStyle)
@@ -121,13 +121,7 @@ export default class Foreground
 
     tearDown()
     {
-        this.canvasContext.clearRect(
-            0,
-            0,
-            this.canvasDimensions.width,
-            this.canvasDimensions.height,
-        );
-
+        this.clear();
         window.removeEventListener('resize', this.initCanvas.bind(this), false);
     }
 }

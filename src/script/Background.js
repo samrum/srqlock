@@ -11,6 +11,7 @@ export default class Background
     init()
     {
         this.canvas = document.getElementById('clockBackground');
+        this.featuredContent = document.getElementById('featuredContent');
         this.canvasContext = this.canvas.getContext('2d');
 
         this.initCanvas();
@@ -61,7 +62,37 @@ export default class Background
         return this.backgroundPosition;
     }
 
-    render(color)
+    render(options)
+    {
+        if (options.hideFeaturedContent)
+        {
+            this.featuredContent.style.display = 'none';
+        }
+
+        if (options.showFeaturedContent)
+        {
+            this.featuredContent.style.display = 'flex';
+
+            if (options.isNight)
+            {
+                this.hide();
+            }
+            else
+            {
+                this.renderAnimated(false, options.color);
+            }
+        }
+        else if (options.isNight)
+        {
+            this.renderStatic(options.color);
+        }
+        else
+        {
+            this.renderAnimated(([0, 2].indexOf(this.backgroundPosition) >= 0), options.color);
+        }
+    }
+
+    renderStatic(color)
     {
         this.canvas.style.left = '0';
         this.canvas.style.top = '0';
@@ -92,7 +123,7 @@ export default class Background
     renderAnimated(show, backgroundColor)
     {
         this.canvasPositionOffset = show ? 100 : 0;
-        this.render(backgroundColor);
+        this.renderStatic(backgroundColor);
 
         requestAnimationFrame(this.animate.bind(this, show));
     }
