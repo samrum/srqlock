@@ -46,21 +46,8 @@ export default class Srqlock
         if (!this.transitionsPaused)
         {
             this.renderForeground(isNight, displayProperties, date);
-
-            if (this.transitionsDone === this.clockTime)
-            {
-                this.transitionsPaused = true;
-                displayProperties.backgroundColor = 'clear';
-            }
-
-            if (isNight)
-            {
-                this.background.renderStatic(displayProperties.backgroundColor);
-            }
-            else
-            {
-                this.background.renderAnimated(displayProperties.backgroundColor);
-            }
+            this.renderBackground(isNight, displayProperties.backgroundColor);
+            this.transitionsPaused = (this.transitionsDone === this.clockTime);
         }
 
         this.transitionsDone = this.transitionsDone + 1;
@@ -74,7 +61,7 @@ export default class Srqlock
         {
             if (isNight)
             {
-                this.foreground.clear();
+                this.foreground.hide();
             }
             else
             {
@@ -88,6 +75,33 @@ export default class Srqlock
         else
         {
             this.foreground.render(displayProperties, formattedTime, false);
+        }
+    }
+
+    renderBackground(isNight, backgroundColor)
+    {
+        if (this.transitionsDone === this.clockTime)
+        {
+            if (isNight)
+            {
+                this.background.hide();
+            }
+            else
+            {
+                this.background.renderDisplay(false, backgroundColor);
+            }
+        }
+        else if (this.transitionsDone === 0 && !isNight)
+        {
+            this.background.renderDisplay(true, backgroundColor);
+        }
+        else if (isNight)
+        {
+            this.background.renderStatic(backgroundColor);
+        }
+        else
+        {
+            this.background.renderAnimated(backgroundColor);
         }
     }
 

@@ -10,11 +10,13 @@ export default class Background
             y: 0,
         };
         this.backgroundPosition = 0;
+        this.canvasPositionOffset = 100;
     }
 
     init()
     {
-        this.canvasContext = document.getElementById('clockBackground').getContext('2d');
+        this.canvas = document.getElementById('clockBackground');
+        this.canvasContext = this.canvas.getContext('2d');
 
         this.initCanvas();
 
@@ -44,6 +46,16 @@ export default class Background
         this.canvasContext.scale(pixelRatio, pixelRatio);
     }
 
+    hide()
+    {
+        this.canvas.style.display = 'none';
+    }
+
+    show()
+    {
+        this.canvas.style.display = 'block';
+    }
+
     getBackgroundPosition()
     {
         return this.backgroundPosition;
@@ -51,7 +63,17 @@ export default class Background
 
     renderStatic(color)
     {
-        this.renderBackground(color, { x: 0, y: 0 });
+        this.canvas.style.left = '0';
+        this.canvas.style.top = '0';
+
+        // this.renderBackground(color, { x: 0, y: 0 });
+        this.canvasContext.fillStyle = color;
+        this.canvasContext.fillRect(
+            0,
+            0,
+            this.canvasDimensions.width,
+            this.canvasDimensions.height,
+        );
     }
 
     clearBackground(coordinates)
@@ -66,20 +88,14 @@ export default class Background
 
     renderBackground(color, coordinates)
     {
-        if (color === 'clear')
-        {
-            this.clearBackground(this.backgroundLocation);
-        }
-        else
-        {
-            this.canvasContext.fillStyle = [0, 2].indexOf(this.backgroundPosition) >= 0 ? color : '#fff';
-            this.canvasContext.fillRect(
-                coordinates.x,
-                coordinates.y,
-                this.canvasDimensions.width,
-                this.canvasDimensions.height,
-            );
-        }
+        this.show();
+        this.canvasContext.fillStyle = [0, 2].indexOf(this.backgroundPosition) >= 0 ? color : '#fff';
+        this.canvasContext.fillRect(
+            coordinates.x,
+            coordinates.y,
+            this.canvasDimensions.width,
+            this.canvasDimensions.height,
+        );
     }
 
     updateBackgroundLocation()
@@ -139,6 +155,42 @@ export default class Background
         if (continueAnimation)
         {
             requestAnimationFrame(this.animateBackground.bind(this, backgroundColor));
+        }
+    }
+
+    updateCanvasPosition(show)
+    {
+        let offset = [1, 2].indexOf(this.backgroundPosition) >= 0 ? `-${this.canvasPositionOffset}` : `${this.canvasPositionOffset}`;
+        const location = [0, 2].indexOf(this.backgroundPosition) >= 0 ? 'top' : 'left';
+
+        if (!show)
+        {
+            offset *= -1;
+        }
+
+        this.canvas.style[location] = `${offset}%`;
+    }
+
+    renderDisplay(show, backgroundColor)
+    {
+        this.canvasPositionOffset = show ? 100 : 0;
+        this.renderStatic(backgroundColor);
+
+        requestAnimationFrame(this.animateDisplay.bind(this, show));
+    }
+
+    animateDisplay(show)
+    {
+        this.updateCanvasPosition(show);
+        this.canvasPositionOffset = this.canvasPositionOffset - (show ? 5 : -5);
+
+        if (this.canvasPositionOffset >= 0 && this.canvasPositionOffset <= 100)
+        {
+            requestAnimationFrame(this.animateDisplay.bind(this, show));
+        }
+        else
+        {
+            this.backgroundPosition = this.backgroundPosition === 3 ? 0 : (this.backgroundPosition + 1);
         }
     }
 

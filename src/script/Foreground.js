@@ -42,6 +42,16 @@ export default class Foreground
         this.canvasContext.scale(pixelRatio, pixelRatio);
     }
 
+    hide()
+    {
+        this.canvas.style.display = 'none';
+    }
+
+    show()
+    {
+        this.canvas.style.display = 'block';
+    }
+
     clear()
     {
         this.canvas.style.left = '0';
@@ -97,6 +107,7 @@ export default class Foreground
         this.musicToggle.style.backgroundColor = backgroundColor;
         document.body.style.backgroundColor = backgroundColor;
 
+        this.show();
         this.clear();
 
         if (!keepFillStyle)
