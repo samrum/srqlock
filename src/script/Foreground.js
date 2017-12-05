@@ -117,8 +117,8 @@ export default class Foreground
 
     renderStatic(displayProps, timeString, keepFillStyle)
     {
-        const timeFontSize = 95;
-        const bylineFontSize = 45;
+        const timeFontSize = 6;
+        const bylineFontSize = 3;
         const bylineSpacing = 60;
         const { backgroundColor, textColor } = displayProps;
 
@@ -131,14 +131,14 @@ export default class Foreground
             this.canvasContext.fillStyle = textColor;
         }
 
-        this.canvasContext.font = `bold ${timeFontSize}px Arial`;
+        this.canvasContext.font = `bold ${timeFontSize}em Arial`;
         this.canvasContext.textAlign = 'center';
         this.canvasContext.fillText(
             timeString,
             this.canvasDimensions.width / 2,
             this.canvasDimensions.height / 2,
         );
-        this.canvasContext.font = `${bylineFontSize}px Arial`;
+        this.canvasContext.font = `${bylineFontSize}em Arial`;
         this.canvasContext.fillText('samrum', this.canvasDimensions.width / 2, (this.canvasDimensions.height / 2) + bylineSpacing);
     }
 
