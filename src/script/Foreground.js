@@ -60,6 +60,29 @@ export default class Foreground
         );
     }
 
+    render(options)
+    {
+        if (options.hide)
+        {
+            if (options.isNight)
+            {
+                this.hide();
+            }
+            else
+            {
+                this.renderAnimated(false, options.displayProperties, options.timeString, options.backgroundPosition);
+            }
+        }
+        else if (options.show && !options.isNight)
+        {
+            this.renderAnimated(true, options.displayProperties, options.timeString, options.backgroundPosition);
+        }
+        else
+        {
+            this.renderStatic(options.displayProperties, options.timeString, false);
+        }
+    }
+
     updateCanvasPosition(inwards, backgroundPosition)
     {
         let offset = [1, 2].indexOf(backgroundPosition) >= 0 ? `-${this.canvasPositionOffset}` : `${this.canvasPositionOffset}`;
@@ -76,7 +99,7 @@ export default class Foreground
     renderAnimated(inwards, displayProps, timeString, backgroundPosition)
     {
         this.canvasPositionOffset = inwards ? 100 : 0;
-        this.render(displayProps, timeString, !inwards);
+        this.renderStatic(displayProps, timeString, !inwards);
 
         requestAnimationFrame(this.animate.bind(this, inwards, backgroundPosition));
     }
@@ -92,7 +115,7 @@ export default class Foreground
         }
     }
 
-    render(displayProps, timeString, keepFillStyle)
+    renderStatic(displayProps, timeString, keepFillStyle)
     {
         const timeFontSize = 95;
         const bylineFontSize = 45;

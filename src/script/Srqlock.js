@@ -47,7 +47,15 @@ export default class Srqlock
         {
             this.transitionsPaused = (this.transitionsDone === this.clockTime);
 
-            this.renderForeground(isNight, displayProperties, date);
+            this.foreground.render({
+                isNight,
+                displayProperties,
+                hide: this.transitionsPaused,
+                show: this.transitionsDone === 0,
+                timeString: getFormattedTime(date),
+                backgroundPosition: this.background.getBackgroundPosition(),
+            });
+
             this.background.render({
                 isNight,
                 showFeaturedContent: this.transitionsPaused,
@@ -57,31 +65,6 @@ export default class Srqlock
         }
 
         this.transitionsDone = this.transitionsDone + 1;
-    }
-
-    renderForeground(isNight, displayProperties, date)
-    {
-        const formattedTime = getFormattedTime(date);
-
-        if (this.transitionsDone === this.clockTime)
-        {
-            if (isNight)
-            {
-                this.foreground.hide();
-            }
-            else
-            {
-                this.foreground.renderAnimated(false, displayProperties, formattedTime, this.background.getBackgroundPosition());
-            }
-        }
-        else if (this.transitionsDone === 0 && !isNight)
-        {
-            this.foreground.renderAnimated(true, displayProperties, formattedTime, this.background.getBackgroundPosition());
-        }
-        else
-        {
-            this.foreground.render(displayProperties, formattedTime, false);
-        }
     }
 
     getDisplayProperties(timeOfDay)
