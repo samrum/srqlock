@@ -4,7 +4,6 @@ export default class Foreground
     {
         this.canvasContext = null;
         this.canvasDimensions = null;
-
         this.canvasPositionOffset = 100;
     }
 
@@ -26,11 +25,6 @@ export default class Foreground
         this.canvasDimensions = {
             width: window.innerWidth,
             height: window.innerHeight,
-        };
-
-        this.animationSpeeds = {
-            x: (this.canvasDimensions.width / 60) * 2,
-            y: (this.canvasDimensions.height / 60) * 2,
         };
 
         const { canvas } = this.canvasContext;
@@ -83,17 +77,17 @@ export default class Foreground
         this.canvasPositionOffset = inwards ? 100 : 0;
         this.render(displayProps, timeString, !inwards);
 
-        requestAnimationFrame(this.animateForeground.bind(this, inwards, backgroundPosition));
+        requestAnimationFrame(this.animate.bind(this, inwards, backgroundPosition));
     }
 
-    animateForeground(inwards, backgroundPosition)
+    animate(inwards, backgroundPosition)
     {
         this.updateCanvasPosition(inwards, backgroundPosition);
         this.canvasPositionOffset = this.canvasPositionOffset - (inwards ? 5 : -5);
 
         if (this.canvasPositionOffset >= 0 && this.canvasPositionOffset <= 100)
         {
-            requestAnimationFrame(this.animateForeground.bind(this, inwards, backgroundPosition));
+            requestAnimationFrame(this.animate.bind(this, inwards, backgroundPosition));
         }
     }
 
@@ -105,7 +99,6 @@ export default class Foreground
         const { backgroundColor, textColor } = displayProps;
 
         this.musicToggle.style.backgroundColor = backgroundColor;
-        document.body.style.backgroundColor = backgroundColor;
 
         this.show();
         this.clear();

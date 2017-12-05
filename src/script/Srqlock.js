@@ -80,28 +80,35 @@ export default class Srqlock
 
     renderBackground(isNight, backgroundColor)
     {
+        if (this.transitionsDone === 1)
+        {
+            document.getElementById('featuredContent').style.display = 'none';
+        }
+
         if (this.transitionsDone === this.clockTime)
         {
+            document.getElementById('featuredContent').style.display = 'flex';
+
             if (isNight)
             {
                 this.background.hide();
             }
             else
             {
-                this.background.renderDisplay(false, backgroundColor);
+                this.background.renderAnimated(false, backgroundColor);
             }
         }
         else if (this.transitionsDone === 0 && !isNight)
         {
-            this.background.renderDisplay(true, backgroundColor);
+            this.background.renderAnimated(true, backgroundColor);
         }
         else if (isNight)
         {
-            this.background.renderStatic(backgroundColor);
+            this.background.render(backgroundColor);
         }
         else
         {
-            this.background.renderAnimated(backgroundColor);
+            this.background.renderAnimated(([0, 2].indexOf(this.background.getBackgroundPosition()) >= 0), backgroundColor);
         }
     }
 
