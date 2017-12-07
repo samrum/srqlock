@@ -44,6 +44,7 @@ canvas {
 .moveInFromTop {
     animation-duration: 0.4s;
     animation-fill-mode: forwards;
+    animation-timing-function: linear;
 }
 
 .moveOutRight {
