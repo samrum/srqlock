@@ -83,35 +83,29 @@ export default class Foreground
         }
     }
 
-    updateCanvasPosition(inwards, backgroundPosition)
-    {
-        let offset = [1, 2].indexOf(backgroundPosition) >= 0 ? `-${this.canvasPositionOffset}` : `${this.canvasPositionOffset}`;
-        const location = [0, 2].indexOf(backgroundPosition) >= 0 ? 'top' : 'left';
-
-        if (!inwards)
-        {
-            offset *= -1;
-        }
-
-        this.canvas.style[location] = `${offset}%`;
-    }
-
     renderAnimated(inwards, displayProps, timeString, backgroundPosition)
     {
-        this.canvasPositionOffset = inwards ? 100 : 0;
         this.renderStatic(displayProps, timeString, !inwards);
 
-        requestAnimationFrame(this.animate.bind(this, inwards, backgroundPosition));
-    }
-
-    animate(inwards, backgroundPosition)
-    {
-        this.updateCanvasPosition(inwards, backgroundPosition);
-        this.canvasPositionOffset = this.canvasPositionOffset - (inwards ? 5 : -5);
-
-        if (this.canvasPositionOffset >= 0 && this.canvasPositionOffset <= 100)
+        if (backgroundPosition === 0)
         {
-            requestAnimationFrame(this.animate.bind(this, inwards, backgroundPosition));
+            this.canvas.classList.remove('moveOutLeft');
+            this.canvas.classList.add('moveInFromBottom');
+        }
+        else if (backgroundPosition === 1)
+        {
+            this.canvas.classList.remove('moveInFromBottom');
+            this.canvas.classList.add('moveOutRight');
+        }
+        else if (backgroundPosition === 2)
+        {
+            this.canvas.classList.remove('moveOutRight');
+            this.canvas.classList.add('moveInFromTop');
+        }
+        else
+        {
+            this.canvas.classList.remove('moveInFromTop');
+            this.canvas.classList.add('moveOutLeft');
         }
     }
 

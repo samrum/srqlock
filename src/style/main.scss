@@ -7,7 +7,7 @@ body {
 
 canvas {
     position: absolute;
-    top: 0;
+    top: 100%;
     left: 0;
 }
 
@@ -36,4 +36,72 @@ canvas {
     color: #eaeaea;
     font-size: 4em;
     font-family: arial;
+}
+
+.moveOutRight,
+.moveOutLeft,
+.moveInFromBottom,
+.moveInFromTop {
+    animation-duration: 0.4s;
+    animation-fill-mode: forwards;
+}
+
+.moveOutRight {
+    animation-name: outRight;
+}
+
+.moveOutLeft {
+    animation-name: outLeft;
+}
+
+.moveInFromBottom {
+    animation-name: inFromBottom;
+}
+
+.moveInFromTop {
+    animation-name: inFromTop;
+}
+
+@keyframes outLeft {
+    from {
+        top: 0;
+        left: 0;
+    }
+
+    to {
+        left: -100%;
+    }
+}
+
+@keyframes outRight {
+    from {
+        top: 0;
+        left: 0;
+    }
+
+    to {
+        left: 100%;
+    }
+}
+
+@keyframes inFromTop {
+    from {
+        top: -100%;
+        left: 0;
+    }
+
+    to {
+        top: 0;
+    }
+}
+
+@keyframes inFromBottom {
+    from {
+        top: 100%;
+        left: 0;
+    }
+
+    to {
+        top: 0;
+    }
 }

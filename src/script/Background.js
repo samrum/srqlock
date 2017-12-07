@@ -79,7 +79,7 @@ export default class Background
             }
             else
             {
-                this.renderAnimated(false, options.color);
+                this.renderAnimated(options.color);
             }
         }
         else if (options.isNight)
@@ -88,7 +88,7 @@ export default class Background
         }
         else
         {
-            this.renderAnimated(([0, 2].indexOf(this.backgroundPosition) >= 0), options.color);
+            this.renderAnimated(options.color);
         }
     }
 
@@ -107,40 +107,32 @@ export default class Background
         );
     }
 
-    updateCanvasPosition(show)
+    renderAnimated(backgroundColor)
     {
-        let offset = [1, 2].indexOf(this.backgroundPosition) >= 0 ? `-${this.canvasPositionOffset}` : `${this.canvasPositionOffset}`;
-        const location = [0, 2].indexOf(this.backgroundPosition) >= 0 ? 'top' : 'left';
-
-        if (!show)
-        {
-            offset *= -1;
-        }
-
-        this.canvas.style[location] = `${offset}%`;
-    }
-
-    renderAnimated(show, backgroundColor)
-    {
-        this.canvasPositionOffset = show ? 100 : 0;
         this.renderStatic(backgroundColor);
 
-        requestAnimationFrame(this.animate.bind(this, show));
-    }
-
-    animate(show)
-    {
-        this.updateCanvasPosition(show);
-        this.canvasPositionOffset = this.canvasPositionOffset - (show ? 5 : -5);
-
-        if (this.canvasPositionOffset >= 0 && this.canvasPositionOffset <= 100)
+        if (this.backgroundPosition === 0)
         {
-            requestAnimationFrame(this.animate.bind(this, show));
+            this.canvas.classList.remove('moveOutLeft');
+            this.canvas.classList.add('moveInFromBottom');
+        }
+        else if (this.backgroundPosition === 1)
+        {
+            this.canvas.classList.remove('moveInFromBottom');
+            this.canvas.classList.add('moveOutRight');
+        }
+        else if (this.backgroundPosition === 2)
+        {
+            this.canvas.classList.remove('moveOutRight');
+            this.canvas.classList.add('moveInFromTop');
         }
         else
         {
-            this.backgroundPosition = this.backgroundPosition === 3 ? 0 : (this.backgroundPosition + 1);
+            this.canvas.classList.remove('moveInFromTop');
+            this.canvas.classList.add('moveOutLeft');
         }
+
+        this.backgroundPosition = this.backgroundPosition === 3 ? 0 : (this.backgroundPosition + 1);
     }
 
     tearDown()
