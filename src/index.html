@@ -10,11 +10,16 @@
   <% } %>
 </head>
 <body>
-  <div id="featuredContent">
-    Ruben Medina
+  <div id="featuredContent" class="centeredColumn">
+    <a href="https://github.com/samrum" class="githubLink">
+      Ruben Medina
+    </a>
   </div>
-  <canvas id="clockBackground">This page requires the use of a modern browser!</canvas>
-  <canvas id="clockTime"></canvas>
+  <div id="clockBackground"></div>
+  <div id="clockTime" class="centeredColumn">
+    <span id="clockHeadline"></span>
+    <span id="clockByline"></span>
+  </div>
   <button id="musicToggle">Music</button>
 
   <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>

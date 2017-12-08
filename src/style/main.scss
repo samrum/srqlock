@@ -1,3 +1,13 @@
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
 html,
 body {
     width: 100%;
@@ -5,13 +15,49 @@ body {
     margin: 0;
 }
 
-canvas {
+body {
+    font-family: arial;
+}
+
+.centeredColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#clockBackground {
+    width: 100%;
+    height: 100%;
     position: absolute;
     top: 100%;
     left: 0;
 }
 
+#clockTime {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    span {
+        display: block;
+    }
+}
+
+#clockHeadline {
+    font-size: 6em;
+    font-weight: bold;
+}
+
+#clockByline {
+    font-size: 3em;
+    margin-top: -0.1em;
+}
+
 #musicToggle {
+    display: none;
     position: absolute;
     top: 25%;
     left: 0;
@@ -22,20 +68,35 @@ canvas {
     border-radius: 0px 5px 5px 0;
 }
 
+
+@media screen and (max-width: 320px) {
+    #clockHeadline {
+        font-size: 5em;
+    }
+
+    #clockByline {
+        font-size: 2em;
+    }
+
+    #musicToggle {
+        top: 80%;
+    }
+}
+
 #featuredContent {
     position: absolute;
     top: 0;
     left: 0;
     display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     width: 100%;
     height: 100%;
     background-color: #181e21;
-    color: #eaeaea;
     font-size: 4em;
-    font-family: arial;
+    padding: 0 0.5em;
+
+    .githubLink {
+        color: #eaeaea;
+    }
 }
 
 .moveOutRight,

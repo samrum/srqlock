@@ -1,63 +1,31 @@
 export default class Foreground
 {
-    constructor()
-    {
-        this.canvasContext = null;
-        this.canvasDimensions = null;
-        this.canvasPositionOffset = 100;
-    }
-
     init()
     {
-        this.canvas = document.getElementById('clockTime');
-        this.canvasContext = this.canvas.getContext('2d');
+        this.foreground = document.getElementById('clockTime');
+        this.clockHeadline = document.getElementById('clockHeadline');
+
+        this.clockByline = document.getElementById('clockByline');
+        this.clockByline.textContent = 'samrum';
+
         this.musicToggle = document.getElementById('musicToggle');
-
-        this.initCanvas();
-
-        window.addEventListener('resize', this.initCanvas.bind(this), false);
-    }
-
-    initCanvas()
-    {
-        const pixelRatio = window.devicePixelRatio || 1;
-
-        this.canvasDimensions = {
-            width: window.innerWidth,
-            height: window.innerHeight,
-        };
-
-        const { canvas } = this.canvasContext;
-
-        canvas.width = this.canvasDimensions.width * pixelRatio;
-        canvas.height = this.canvasDimensions.height * pixelRatio;
-        canvas.style.width = `${this.canvasDimensions.width}px`;
-        canvas.style.height = `${this.canvasDimensions.height}px`;
-        this.canvasContext.scale(pixelRatio, pixelRatio);
+        this.musicToggle.style.display = 'block';
     }
 
     hide()
     {
-        this.canvas.style.display = 'none';
+        this.foreground.style.display = 'none';
     }
 
     show()
     {
-        this.canvas.style.display = 'block';
+        this.foreground.style.display = 'flex';
     }
 
-    clear()
+    reset()
     {
-        this.show();
-        this.canvas.style.left = '0';
-        this.canvas.style.top = '0';
-
-        this.canvasContext.clearRect(
-            0,
-            0,
-            this.canvasDimensions.width,
-            this.canvasDimensions.height,
-        );
+        this.foreground.style.top = '100%';
+        this.foreground.style.left = '0';
     }
 
     render(options)
@@ -89,56 +57,46 @@ export default class Foreground
 
         if (backgroundPosition === 0)
         {
-            this.canvas.classList.remove('moveOutLeft');
-            this.canvas.classList.add('moveInFromBottom');
+            this.foreground.classList.remove('moveOutLeft');
+            this.foreground.classList.add('moveInFromBottom');
         }
         else if (backgroundPosition === 1)
         {
-            this.canvas.classList.remove('moveInFromBottom');
-            this.canvas.classList.add('moveOutRight');
+            this.foreground.classList.remove('moveInFromBottom');
+            this.foreground.classList.add('moveOutRight');
         }
         else if (backgroundPosition === 2)
         {
-            this.canvas.classList.remove('moveOutRight');
-            this.canvas.classList.add('moveInFromTop');
+            this.foreground.classList.remove('moveOutRight');
+            this.foreground.classList.add('moveInFromTop');
         }
         else
         {
-            this.canvas.classList.remove('moveInFromTop');
-            this.canvas.classList.add('moveOutLeft');
+            this.foreground.classList.remove('moveInFromTop');
+            this.foreground.classList.add('moveOutLeft');
         }
     }
 
     renderStatic(displayProps, timeString, keepFillStyle)
     {
-        const timeFontSize = 6;
-        const bylineFontSize = 3;
-        const bylineSpacing = 60;
         const { backgroundColor, textColor } = displayProps;
 
-        this.musicToggle.style.backgroundColor = backgroundColor;
+        this.foreground.style.left = '0';
+        this.foreground.style.top = '0';
 
-        this.clear();
+        this.clockHeadline.textContent = timeString;
+        this.musicToggle.style.backgroundColor = backgroundColor;
 
         if (!keepFillStyle)
         {
-            this.canvasContext.fillStyle = textColor;
+            this.foreground.style.color = textColor;
         }
 
-        this.canvasContext.font = `bold ${timeFontSize}em Arial`;
-        this.canvasContext.textAlign = 'center';
-        this.canvasContext.fillText(
-            timeString,
-            this.canvasDimensions.width / 2,
-            this.canvasDimensions.height / 2,
-        );
-        this.canvasContext.font = `${bylineFontSize}em Arial`;
-        this.canvasContext.fillText('samrum', this.canvasDimensions.width / 2, (this.canvasDimensions.height / 2) + bylineSpacing);
+        this.show();
     }
 
     tearDown()
     {
-        this.clear();
-        window.removeEventListener('resize', this.initCanvas.bind(this), false);
+        this.reset();
     }
 }
