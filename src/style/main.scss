@@ -17,6 +17,7 @@ body {
 
 body {
     font-family: arial;
+    overflow: hidden;
 }
 
 .centeredColumn {
@@ -68,21 +69,6 @@ body {
     border-radius: 0px 5px 5px 0;
 }
 
-
-@media screen and (max-width: 320px) {
-    #clockHeadline {
-        font-size: 5em;
-    }
-
-    #clockByline {
-        font-size: 2em;
-    }
-
-    #musicToggle {
-        top: 80%;
-    }
-}
-
 #featuredContent {
     position: absolute;
     top: 0;
@@ -96,6 +82,20 @@ body {
 
     .githubLink {
         color: #eaeaea;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    #clockHeadline {
+        font-size: 5em;
+    }
+
+    #clockByline {
+        font-size: 2em;
+    }
+
+    #musicToggle {
+        top: 80%;
     }
 }
 
