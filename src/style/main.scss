@@ -105,7 +105,7 @@ body {
 .moveOutLeft,
 .moveInFromBottom,
 .moveInFromTop {
-    animation-duration: 0.3s;
+    animation-duration: 0.25s;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
 }
@@ -128,44 +128,40 @@ body {
 
 @keyframes outLeft {
     from {
-        top: 0;
-        left: 0;
+        transform: translate(0, 0);
     }
 
     to {
-        left: -100%;
+        transform: translate(-100%, 0);
     }
 }
 
 @keyframes outRight {
     from {
-        top: 0;
-        left: 0;
+        transform: translate(0, 0);
     }
 
     to {
-        left: 100%;
+        transform: translate(100%, 0);
     }
 }
 
 @keyframes inFromTop {
     from {
-        top: -100%;
-        left: 0;
+        transform: translate(0, -100%);
     }
 
     to {
-        top: 0;
+        transform: translate(0, 0);
     }
 }
 
 @keyframes inFromBottom {
     from {
-        top: 100%;
-        left: 0;
+        transform: translate(0, 100%);
     }
 
     to {
-        top: 0;
+        transform: translate(0, 0);
     }
 }
