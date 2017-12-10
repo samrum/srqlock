@@ -10,19 +10,17 @@
   <% } %>
 </head>
 <body>
-  <div id="clockContainer">
-    <div id="featuredContent" class="centeredColumn">
-      <a href="https://github.com/samrum" class="githubLink">
-        Ruben Medina
-      </a>
-    </div>
-    <div id="clockBackground"></div>
-    <div id="clockTime" class="centeredColumn">
-      <span id="clockHeadline"></span>
-      <span id="clockByline"></span>
-    </div>
-    <button id="musicToggle">Music</button>
+  <div id="featuredContent" class="centeredColumn">
+    <a href="https://github.com/samrum" target="_blank" class="githubLink">
+      Ruben Medina
+    </a>
   </div>
+  <div id="clockBackground"></div>
+  <div id="clockTime" class="centeredColumn">
+    <span id="clockHeadline"></span>
+    <span id="clockByline"></span>
+  </div>
+  <button id="musicToggle">Music</button>
 
   <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
     <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
