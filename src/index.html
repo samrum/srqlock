@@ -15,12 +15,14 @@
       Ruben Medina
     </a>
   </div>
-  <div id="clockBackground"></div>
-  <div id="clockTime" class="centeredColumn">
-    <span id="clockHeadline"></span>
-    <span id="clockByline"></span>
+  <div id="clockContainer">
+    <div id="clockBackground"></div>
+    <div id="clockTime" class="centeredColumn">
+      <span id="clockHeadline"></span>
+      <span id="clockByline"></span>
+    </div>
+    <button id="musicToggle">Music</button>
   </div>
-  <button id="musicToggle">Music</button>
 
   <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
     <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
