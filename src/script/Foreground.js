@@ -1,10 +1,12 @@
-export default class Foreground
-{
-    init()
-    {
-        this.foreground = document.getElementById('clockTime');
-        this.clockHeadline = document.getElementById('clockHeadline');
+import RenderElement from './RenderElement';
 
+export default class Foreground extends RenderElement
+{
+    init(renderElement)
+    {
+        super.init(renderElement);
+
+        this.clockHeadline = document.getElementById('clockHeadline');
         this.clockByline = document.getElementById('clockByline');
         this.clockByline.textContent = 'samrum';
 
@@ -12,25 +14,14 @@ export default class Foreground
         this.musicToggle.style.display = 'block';
     }
 
-    hide()
-    {
-        this.foreground.style.display = 'none';
-    }
-
     show()
     {
-        this.foreground.style.display = 'flex';
-    }
-
-    reset()
-    {
-        this.foreground.style.top = '100%';
-        this.foreground.style.left = '0';
+        this.element.style.display = 'flex';
     }
 
     render(options)
     {
-        if (options.hide)
+        if (options.animateOut)
         {
             if (options.isNight)
             {
@@ -38,65 +29,29 @@ export default class Foreground
             }
             else
             {
-                this.renderAnimated(false, options.displayProperties, options.timeString, options.backgroundPosition);
+                this.renderAnimated(options);
             }
         }
-        else if (options.show && !options.isNight)
+        else if (options.animateIn && !options.isNight)
         {
-            this.renderAnimated(true, options.displayProperties, options.timeString, options.backgroundPosition);
+            this.renderAnimated(options);
         }
         else
         {
-            this.renderStatic(options.displayProperties, options.timeString, false);
+            this.renderStatic(options);
         }
+
+        super.render(options);
     }
 
-    renderAnimated(inwards, displayProps, timeString, backgroundPosition)
+    renderStatic(options)
     {
-        this.renderStatic(displayProps, timeString, !inwards);
+        const { backgroundColor, textColor } = options.displayProperties;
 
-        if (backgroundPosition === 0)
-        {
-            this.foreground.classList.remove('moveOutLeft');
-            this.foreground.classList.add('moveInFromBottom');
-        }
-        else if (backgroundPosition === 1)
-        {
-            this.foreground.classList.remove('moveInFromBottom');
-            this.foreground.classList.add('moveOutRight');
-        }
-        else if (backgroundPosition === 2)
-        {
-            this.foreground.classList.remove('moveOutRight');
-            this.foreground.classList.add('moveInFromTop');
-        }
-        else
-        {
-            this.foreground.classList.remove('moveInFromTop');
-            this.foreground.classList.add('moveOutLeft');
-        }
-    }
-
-    renderStatic(displayProps, timeString, keepFillStyle)
-    {
-        const { backgroundColor, textColor } = displayProps;
-
-        this.foreground.style.left = '0';
-        this.foreground.style.top = '0';
-
-        this.clockHeadline.textContent = timeString;
+        this.clockHeadline.textContent = options.timeString;
+        this.element.style.color = ([0, 2].indexOf(this.renderCount) >= 0 || options.isNight) ? '#fff' : textColor;
         this.musicToggle.style.backgroundColor = backgroundColor;
 
-        if (!keepFillStyle)
-        {
-            this.foreground.style.color = textColor;
-        }
-
-        this.show();
-    }
-
-    tearDown()
-    {
-        this.reset();
+        super.renderStatic(options);
     }
 }

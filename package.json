@@ -6,7 +6,7 @@
   "author": "Ruben Medina <dev@rubenmedina.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development webpack-dev-server --open 'Google Chrome' --config webpack.dev.js",
+    "dev": "NODE_ENV=development webpack-dev-server --config webpack.dev.js",
     "prod": "NODE_ENV=production webpack --config webpack.prod.js"
   },
   "devDependencies": {

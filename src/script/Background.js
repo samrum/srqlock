@@ -1,36 +1,17 @@
-export default class Background
+import RenderElement from './RenderElement';
+
+export default class Background extends RenderElement
 {
-    constructor()
+    init(renderElement)
     {
-        this.backgroundPosition = 0;
-    }
-
-    init()
-    {
-        this.background = document.getElementById('clockBackground');
+        super.init(renderElement);
         this.featuredContent = document.getElementById('featuredContent');
-    }
-
-    hide()
-    {
-        this.background.style.display = 'none';
-    }
-
-    show()
-    {
-        this.background.style.display = 'block';
     }
 
     reset()
     {
-        this.background.style.top = '100%';
-        this.background.style.left = '0';
         this.featuredContent.style.display = 'none';
-    }
-
-    getBackgroundPosition()
-    {
-        return this.backgroundPosition;
+        super.reset();
     }
 
     render(options)
@@ -50,57 +31,24 @@ export default class Background
             }
             else
             {
-                this.renderAnimated(options.color);
+                this.renderAnimated(options);
             }
         }
         else if (options.isNight)
         {
-            this.renderStatic(options.color);
+            this.renderStatic(options);
         }
         else
         {
-            this.renderAnimated(options.color);
+            this.renderAnimated(options);
         }
+
+        super.render(options);
     }
 
-    renderStatic(color)
+    renderStatic(options)
     {
-        this.background.style.left = '0';
-        this.background.style.top = '0';
-        this.background.style.backgroundColor = color;
-        this.show();
-    }
-
-    renderAnimated(backgroundColor)
-    {
-        this.renderStatic(backgroundColor);
-
-        if (this.backgroundPosition === 0)
-        {
-            this.background.classList.remove('moveOutLeft');
-            this.background.classList.add('moveInFromBottom');
-        }
-        else if (this.backgroundPosition === 1)
-        {
-            this.background.classList.remove('moveInFromBottom');
-            this.background.classList.add('moveOutRight');
-        }
-        else if (this.backgroundPosition === 2)
-        {
-            this.background.classList.remove('moveOutRight');
-            this.background.classList.add('moveInFromTop');
-        }
-        else
-        {
-            this.background.classList.remove('moveInFromTop');
-            this.background.classList.add('moveOutLeft');
-        }
-
-        this.backgroundPosition = this.backgroundPosition === 3 ? 0 : (this.backgroundPosition + 1);
-    }
-
-    tearDown()
-    {
-        this.reset();
+        this.element.style.backgroundColor = options.displayProperties.backgroundColor;
+        super.renderStatic(options);
     }
 }

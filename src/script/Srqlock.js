@@ -10,7 +10,7 @@ export default class Srqlock
         this.transitionsPaused = false;
         this.transitionsDone = 0;
         this.clockTime = 5;
-        this.contentTime = 6;
+        this.featuredTime = 6;
         this.musicManager = new MusicManager();
         this.background = new Background();
         this.foreground = new Foreground();
@@ -20,8 +20,8 @@ export default class Srqlock
     init()
     {
         this.musicManager.init();
-        this.background.init();
-        this.foreground.init();
+        this.background.init(document.getElementById('clockBackground'));
+        this.foreground.init(document.getElementById('clockTime'));
 
         this.updateScreen();
         this.updateIntervalId = setInterval(this.updateScreen.bind(this), 1000);
@@ -30,14 +30,12 @@ export default class Srqlock
     updateScreen()
     {
         const date = new Date();
-        // const date = new Date('November 1, 2017 13:13:13');
         const timeOfDay = getTimeOfDay(date);
-        const displayProperties = this.getDisplayProperties(timeOfDay);
         const isNight = (timeOfDay === timesOfDay.night);
 
         this.musicManager.triggerMusic(isNight);
 
-        if (this.transitionsDone === (this.clockTime + this.contentTime))
+        if (this.transitionsDone === (this.clockTime + this.featuredTime))
         {
             this.transitionsDone = 0;
             this.transitionsPaused = false;
@@ -47,20 +45,21 @@ export default class Srqlock
         {
             this.transitionsPaused = (this.transitionsDone === this.clockTime);
 
+            const displayProperties = this.getDisplayProperties(timeOfDay);
+
             this.foreground.render({
                 isNight,
                 displayProperties,
-                hide: this.transitionsPaused,
-                show: this.transitionsDone === 0,
+                animateOut: this.transitionsPaused,
+                animateIn: this.transitionsDone === 0,
                 timeString: getFormattedTime(date),
-                backgroundPosition: this.background.getBackgroundPosition(),
             });
 
             this.background.render({
                 isNight,
+                displayProperties,
                 showFeaturedContent: this.transitionsPaused,
                 hideFeaturedContent: this.transitionsDone === 1,
-                color: displayProperties.backgroundColor,
             });
         }
 
@@ -70,47 +69,27 @@ export default class Srqlock
     getDisplayProperties(timeOfDay)
     {
         let backgroundColor;
-        let textColor;
 
         switch (timeOfDay)
         {
             case timesOfDay.morning:
-                backgroundColor = '#568BDD';
+                backgroundColor = '#568bdd';
                 break;
             case timesOfDay.afternoon:
-                backgroundColor = '#145ECF';
+                backgroundColor = '#145ecf';
                 break;
             case timesOfDay.evening:
-                backgroundColor = '#285EB0';
+                backgroundColor = '#285eb0';
                 break;
             case timesOfDay.night:
-                backgroundColor = '#0C387C';
+                backgroundColor = '#0c387c';
                 break;
             default:
-                backgroundColor = '#145ECF';
-        }
-
-        if ([0, 2].indexOf(this.background.getBackgroundPosition()) >= 0)
-        {
-            textColor = '#FFFFFF';
-        }
-        else
-        {
-            switch (timeOfDay)
-            {
-                case timesOfDay.afternoon:
-                    textColor = '#145ECF';
-                    break;
-                case timesOfDay.evening:
-                    textColor = '#285EB8';
-                    break;
-                default:
-                    textColor = '#568BDD';
-            }
+                backgroundColor = '#145ecf';
         }
 
         return {
-            textColor,
+            textColor: this.transitionsPaused ? '#fff' : backgroundColor,
             backgroundColor,
         };
     }
