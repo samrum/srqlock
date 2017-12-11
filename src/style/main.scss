@@ -127,20 +127,12 @@ body {
 }
 
 @keyframes outLeft {
-    from {
-        transform: translate(0, 0);
-    }
-
     to {
         transform: translate(-100%, 0);
     }
 }
 
 @keyframes outRight {
-    from {
-        transform: translate(0, 0);
-    }
-
     to {
         transform: translate(100%, 0);
     }
@@ -150,18 +142,10 @@ body {
     from {
         transform: translate(0, -100%);
     }
-
-    to {
-        transform: translate(0, 0);
-    }
 }
 
 @keyframes inFromBottom {
     from {
         transform: translate(0, 100%);
-    }
-
-    to {
-        transform: translate(0, 0);
     }
 }
