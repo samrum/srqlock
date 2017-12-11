@@ -127,25 +127,41 @@ body {
 }
 
 @keyframes outLeft {
+    from {
+        transform: translate(0, 0);
+    }
+
     to {
-        transform: translate(-100%, 0);
+        transform: translateX(-100%);
     }
 }
 
 @keyframes outRight {
+    from {
+        transform: translate(0, 0);
+    }
+
     to {
-        transform: translate(100%, 0);
+        transform: translateX(100%);
     }
 }
 
 @keyframes inFromTop {
     from {
-        transform: translate(0, -100%);
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translate(0, 0);
     }
 }
 
 @keyframes inFromBottom {
     from {
-        transform: translate(0, 100%);
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translate(0, 0);
     }
 }

@@ -30,6 +30,7 @@ export default class Srqlock
     updateScreen()
     {
         const date = new Date();
+        // const date = new Date('November 1, 2017 13:13:13');
         const timeOfDay = getTimeOfDay(date);
         const isNight = (timeOfDay === timesOfDay.night);
 
