@@ -23,14 +23,7 @@ export default class Foreground extends RenderElement
     {
         if (options.animateOut)
         {
-            if (options.isNight)
-            {
-                this.hide();
-            }
-            else
-            {
-                this.renderAnimated(options);
-            }
+            this.renderHide(options);
         }
         else if (options.animateIn && !options.isNight)
         {

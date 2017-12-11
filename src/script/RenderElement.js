@@ -32,6 +32,18 @@ export default class RenderElement
         this.renderCount = this.renderCount === 3 ? 0 : (this.renderCount + 1);
     }
 
+    renderHide(options)
+    {
+        if (options.isNight)
+        {
+            this.hide();
+        }
+        else
+        {
+            this.renderAnimated(options);
+        }
+    }
+
     renderStatic()
     {
         this.element.style.left = '0';

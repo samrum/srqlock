@@ -25,14 +25,7 @@ export default class Background extends RenderElement
         {
             this.featuredContent.style.display = 'flex';
 
-            if (options.isNight)
-            {
-                this.hide();
-            }
-            else
-            {
-                this.renderAnimated(options);
-            }
+            this.renderHide(options);
         }
         else if (options.isNight)
         {
