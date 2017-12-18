@@ -1,16 +1,24 @@
 import RenderElement from './RenderElement';
+import Giphy from './Giphy';
 
 export default class Background extends RenderElement
 {
+    constructor()
+    {
+        super();
+        this.giphy = new Giphy();
+    }
+
     init(renderElement)
     {
         super.init(renderElement);
         this.featuredContent = document.getElementById('featuredContent');
+        this.featuredVideo = document.getElementById('featuredVideo');
     }
 
     reset()
     {
-        this.featuredContent.style.display = 'none';
+        this.hideFeaturedContent();
         super.reset();
     }
 
@@ -18,13 +26,18 @@ export default class Background extends RenderElement
     {
         if (options.hideFeaturedContent)
         {
-            this.featuredContent.style.display = 'none';
+            this.hideFeaturedContent();
+            this.giphy.getGiphy()
+                .then((data) =>
+                {
+                    this.featuredVideo.src = data.data.image_mp4_url;
+                })
+                .catch(error => console.error(error));
         }
 
         if (options.showFeaturedContent)
         {
-            this.featuredContent.style.display = 'flex';
-
+            this.showFeaturedContent();
             this.renderHide(options);
         }
         else if (options.isNight)
@@ -43,5 +56,15 @@ export default class Background extends RenderElement
     {
         this.element.style.backgroundColor = options.displayProperties.backgroundColor;
         super.renderStatic(options);
+    }
+
+    hideFeaturedContent()
+    {
+        this.featuredContent.style.display = 'none';
+    }
+
+    showFeaturedContent()
+    {
+        this.featuredContent.style.display = 'flex';
     }
 }
