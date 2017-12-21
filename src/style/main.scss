@@ -1,11 +1,7 @@
-html {
-    box-sizing: border-box;
-}
-
 *,
 *:before,
 *:after {
-    box-sizing: inherit;
+    box-sizing: border-box;
 }
 
 html,
@@ -63,12 +59,12 @@ body {
     position: absolute;
     top: 25%;
     left: 0;
+    margin: 0;
     padding: 16px;
     color: #fff;
     border: none;
     outline: none;
     border-radius: 0px 5px 5px 0;
-    margin: 0;
 }
 
 #featuredContent {
@@ -79,10 +75,6 @@ body {
     width: 100%;
     height: 100%;
     background-color: #181e21;
-
-    .githubLink {
-        color: #eaeaea;
-    }
 }
 
 #featuredVideo {
@@ -94,9 +86,13 @@ body {
     display: flex;
     position: absolute;
     bottom: 0;
-    justify-content: space-around;
-    font-size: 4em;
+    width: 100%;
+    height: 8%;
     padding: 0 .5em;
+
+    img {
+        height: 100%;
+    }
 }
 
 @media screen and (max-width: 320px) {
