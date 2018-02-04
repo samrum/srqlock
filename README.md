@@ -12,4 +12,4 @@ This project uses [yarn](https://yarnpkg.com/en/docs/install) for package manage
 
 ### Production Build
 1. Inside of the project root directory, run `yarn install` to download applicaton dependencies
-2. Run `yarn run prod` to build a productionalized version application into the `dist` directory
+2. Run `yarn run prod` to build a productionalized version of the application into the `dist` directory.
