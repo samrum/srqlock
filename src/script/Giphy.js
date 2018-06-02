@@ -9,7 +9,7 @@ export default class Giphy
 
     getGiphy()
     {
-        const url = `http://api.giphy.com/v1/gifs/random?api_key=${this.apiKey}&rating=g&tag=jpop%20perfume`;
+        const url = `https://api.giphy.com/v1/gifs/random?api_key=${this.apiKey}&rating=g&tag=jpop%20perfume`;
         const options = {
             accept: 'image/*',
         };
