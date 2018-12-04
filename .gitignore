@@ -56,3 +56,8 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# Resources related to dev that shouldn't be committed
+dev-resources/
+
+dist/

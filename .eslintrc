@@ -1,0 +1,20 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+
+    "root": true,
+  
+    "plugins": [
+        "prettier"
+    ],
+  
+    "env": {
+        "browser": true
+    },
+  
+    "rules": {
+        "prettier/prettier": "error"
+    }
+}
