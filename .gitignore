@@ -59,5 +59,3 @@ typings/
 
 # Resources related to dev that shouldn't be committed
 dev-resources/
-
-dist/
