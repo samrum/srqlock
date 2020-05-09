@@ -27,7 +27,7 @@ export default class MusicManager {
       },
     ];
 
-    musicTracks.forEach(track => {
+    musicTracks.forEach((track) => {
       this.tracks[track.name] = document.createElement("audio");
       this.tracks[track.name].src = track.filePath;
       this.tracks[track.name].preload = "none";
@@ -36,7 +36,7 @@ export default class MusicManager {
   }
 
   toggleAudioPlaying() {
-    Object.keys(this.tracks).forEach(track => {
+    Object.keys(this.tracks).forEach((track) => {
       if (this.audioPlaying) {
         this.tracks[track].pause();
         this.tracks[track].currentTime = 0;

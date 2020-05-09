@@ -23,10 +23,10 @@ export default class Background extends RenderElement {
       this.hideFeaturedContent();
       this.giphy
         .getGiphy()
-        .then(data => {
+        .then((data) => {
           this.featuredVideo.src = data.data.image_mp4_url;
         })
-        .catch(error => console.error(error));
+        .catch((error) => console.error(error));
     }
 
     if (options.showFeaturedContent) {

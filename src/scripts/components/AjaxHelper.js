@@ -4,14 +4,14 @@ export default function fetchUrl(url, options = {}) {
       method: "GET",
       headers: new Headers(options),
     })
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw Error(response.statusText);
         }
 
         return response.json();
       })
-      .then(data => resolve(data))
-      .catch(error => reject(error));
+      .then((data) => resolve(data))
+      .catch((error) => reject(error));
   });
 }
