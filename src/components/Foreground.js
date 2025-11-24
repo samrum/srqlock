@@ -1,4 +1,4 @@
-import RenderElement from "@components/RenderElement";
+import RenderElement from "./RenderElement";
 
 export default class Foreground extends RenderElement {
   init(renderElement) {

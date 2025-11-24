@@ -60,8 +60,4 @@ export default class RenderElement {
       this.element.classList.add("moveOutLeft");
     }
   }
-
-  tearDown() {
-    this.reset();
-  }
 }
