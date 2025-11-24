@@ -1,15 +1,11 @@
-/**
- * For more details on how to configure Wrangler, refer to:
- * https://developers.cloudflare.com/workers/wrangler/configuration/
- */
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "srqlock",
   "compatibility_date": "2025-11-21",
   "assets": {
-    "directory": "./dist",
+    "directory": "./dist"
   },
   "observability": {
-    "enabled": true,
-  },
+    "enabled": true
+  }
 }
