@@ -1,5 +1,5 @@
-import RenderElement from "@components/RenderElement";
-import Giphy from "@components/Giphy";
+import RenderElement from "./RenderElement";
+import Giphy from "./Giphy";
 
 export default class Background extends RenderElement {
   constructor() {
@@ -21,12 +21,12 @@ export default class Background extends RenderElement {
   render(options) {
     if (options.hideFeaturedContent) {
       this.hideFeaturedContent();
-      this.giphy
-        .getGiphy()
-        .then((data) => {
-          this.featuredVideo.src = data.data.image_mp4_url;
-        })
-        .catch((error) => console.error(error));
+      // this.giphy
+      //   .getGiphy()
+      //   .then((data) => {
+      //     this.featuredVideo.src = data.data.image_mp4_url;
+      //   })
+      //   .catch((error) => console.error(error));
     }
 
     if (options.showFeaturedContent) {

@@ -1,11 +1,7 @@
-import MusicManager from "@components/MusicManager";
-import Background from "@components/Background";
-import Foreground from "@components/Foreground";
-import {
-  timesOfDay,
-  getTimeOfDay,
-  getFormattedTime,
-} from "@components/TimeHelper";
+import MusicManager from "./MusicManager";
+import Background from "./Background";
+import Foreground from "./Foreground";
+import { timesOfDay, getTimeOfDay, getFormattedTime } from "./TimeHelper";
 
 export default class Srqlock {
   constructor() {
@@ -89,12 +85,5 @@ export default class Srqlock {
       textColor: this.transitionsPaused ? "#fff" : backgroundColor,
       backgroundColor,
     };
-  }
-
-  tearDown() {
-    clearInterval(this.updateIntervalId);
-    this.background.tearDown();
-    this.foreground.tearDown();
-    this.musicManager.tearDown();
   }
 }

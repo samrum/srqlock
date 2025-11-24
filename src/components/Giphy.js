@@ -1,4 +1,4 @@
-import fetchUrl from "@components/AjaxHelper";
+import fetchUrl from "./AjaxHelper";
 
 export default class Giphy {
   constructor() {

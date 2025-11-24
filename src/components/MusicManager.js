@@ -1,5 +1,5 @@
-import musicDay from "@sounds/unitock.mp3";
-import musicNight from "@sounds/unitocknight.mp3";
+import musicDay from "./../sounds/unitock.mp3";
+import musicNight from "./../sounds/unitocknight.mp3";
 
 export default class MusicManager {
   constructor() {
@@ -71,11 +71,5 @@ export default class MusicManager {
         this.tracks.day.play();
       }
     }
-  }
-
-  tearDown() {
-    document
-      .getElementById("musicToggle")
-      .removeEventListener("click", this.toggleAudioPlaying.bind(this), false);
   }
 }

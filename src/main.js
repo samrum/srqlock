@@ -1,5 +1,4 @@
-import Srqlock from "@components/Srqlock";
-import "@styles/index.scss";
+import Srqlock from "./components/Srqlock";
 
 if (
   document.attachEvent
@@ -13,12 +12,4 @@ if (
 
 function init() {
   new Srqlock().init();
-}
-
-if (module.hot) {
-  module.hot.accept("@components/Srqlock", () => {
-    srqlock.tearDown();
-    srqlock = new Srqlock();
-    srqlock.init();
-  });
 }
